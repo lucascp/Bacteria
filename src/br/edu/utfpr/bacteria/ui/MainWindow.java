@@ -1,5 +1,6 @@
 package br.edu.utfpr.bacteria.ui;
 
+import br.edu.utfpr.bacteria.util.ImageOpenFilter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
@@ -90,6 +91,7 @@ public class MainWindow extends javax.swing.JFrame {
 
     private void jMenuItemAbrirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemAbrirActionPerformed
         JFileChooser chooser = new JFileChooser();
+        chooser.addChoosableFileFilter(new ImageOpenFilter());
         chooser.showOpenDialog(chooser);
 
         if(chooser.getSelectedFile() == null)
