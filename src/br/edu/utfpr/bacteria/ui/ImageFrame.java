@@ -13,15 +13,17 @@ public class ImageFrame extends javax.swing.JInternalFrame {
         this();
         this.imageFile = imageFile;
         this.bufferedImage = ImageIO.read(imageFile);
+        
         setTitle(imageFile.getName());
-        setSize(bufferedImage.getWidth(), bufferedImage.getHeight());
+        
+        jLabel.setSize(bufferedImage.getWidth(), bufferedImage.getHeight());
         jLabel.setIcon(new ImageIcon(bufferedImage));
+        pack();
     }
 
     /** Creates new form ImageFrame */
     private ImageFrame() {
         initComponents();
-        setClosable(true);
     }
 
     public BufferedImage getBufferedImage() {
@@ -41,17 +43,29 @@ public class ImageFrame extends javax.swing.JInternalFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jScrollPane1 = new javax.swing.JScrollPane();
         jLabel = new javax.swing.JLabel();
+
+        setBackground(new java.awt.Color(51, 51, 51));
+        setClosable(true);
+        setIconifiable(true);
+        setMaximizable(true);
+        setResizable(true);
+        setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+
+        jLabel.setBackground(new java.awt.Color(0, 0, 0));
+        jLabel.setVerticalAlignment(javax.swing.SwingConstants.TOP);
+        jScrollPane1.setViewportView(jLabel);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 394, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 340, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 274, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 232, Short.MAX_VALUE)
         );
 
         pack();
@@ -60,6 +74,7 @@ public class ImageFrame extends javax.swing.JInternalFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel;
+    private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
 
 }
