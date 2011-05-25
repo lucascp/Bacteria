@@ -15,14 +15,16 @@ public class JanelaListener implements ActionListener {
         if (e.getActionCommand().equals("abrir")) {
             janela.abrirJanelaInterna();
         } else if (e.getActionCommand().equals("gray")) {
-            Controle.escalaDeCiza(janela.getSelectedFrame());
+            Controle.escalaDeCinza(janela.getSelectedFrame());
+        } else if (e.getActionCommand().equals("oper")) {
+            new JChooseFrame(janela);
         } else if (e.getActionCommand().equals("toolbar")) {
             if (janela.getToolBarStatus() == janela.TOOL_BAR_ON) {
                 ((JMenuItem) e.getSource()).setText("Toolbar OFF");
                 janela.getToolBar().setVisible(false);
                 janela.setToolBarStatus(janela.TOOL_BAR_OFF);
 
-                
+
             } else {
                 ((JMenuItem) e.getSource()).setText("Toolbar ON");
                 janela.getToolBar().setVisible(true);

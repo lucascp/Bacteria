@@ -69,7 +69,7 @@ public class JanelaInterna extends JInternalFrame {
     {
         JFileChooser chooser = new JFileChooser();
         chooser.showOpenDialog(this);
-        this.setTitle(chooser.getSelectedFile().getPath()); // faz a janela escrever o nome do arquivo
+        this.setTitle(chooser.getSelectedFile().getName()); // faz a janela escrever o nome do arquivo
 
         try {
             bufImage = ImageIO.read(chooser.getSelectedFile());
@@ -87,6 +87,7 @@ public class JanelaInterna extends JInternalFrame {
         add(l);
         JScrollPane pane = new JScrollPane(l);        
         add(pane);
+        setSize(larguraImagem+20, alturaImagem+40);
     }
 
     public float[][] getBlue() {
@@ -137,6 +138,7 @@ public class JanelaInterna extends JInternalFrame {
         add(l);
         JScrollPane pane = new JScrollPane(l);
         add(pane);
+        setSize(larguraImagem+20, alturaImagem+40);
     }
 
     

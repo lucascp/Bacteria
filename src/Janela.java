@@ -35,6 +35,7 @@ public class Janela extends JFrame
     public Janela()
     {
         super("Bactéria 2 -- versão Beta");
+        
         controle = new Controle(this);
         
         listener = new JanelaListener(this);
@@ -99,6 +100,7 @@ public class Janela extends JFrame
         JMenuBar barra = new JMenuBar();
 
         JMenu arquivo = new JMenu("Arquivo");
+        JMenu operacoes = new JMenu("Operações");
 
         //adicionadas no JMenu arquivo
         JMenuItem abrir = new JMenuItem("Abrir...");
@@ -111,17 +113,26 @@ public class Janela extends JFrame
 
         JMenuItem toolbar = new JMenuItem("Toolbar ON");
         toolbar.setActionCommand("toolbar");
+
+        //adicionadas no JMenu operacoes
+        JMenuItem soma = new JMenuItem("Lógicas e Aritméticas");
+        soma.setActionCommand("oper");
         
         arquivo.add(abrir);
-        arquivo.add(salvar);
-        arquivo.add(grayscale);
+        arquivo.add(salvar);        
         arquivo.add(toolbar);
 
+        operacoes.add(soma);
+        operacoes.add(grayscale);
+
         barra.add(arquivo);
+        barra.add(operacoes);
 
         abrir.addActionListener(listener);
         grayscale.addActionListener(listener);
         toolbar.addActionListener(listener);
+        soma.addActionListener(listener);
+
         return barra;
     }
 
