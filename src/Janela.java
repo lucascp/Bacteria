@@ -65,6 +65,16 @@ public class Janela extends JFrame
         } catch (PropertyVetoException ex) {}
     }
 
+    public void abrirJanelaHistograma()
+    {
+        JanelaHistograma janelinha = new JanelaHistograma(red, green, blue, gray, SOMEBITS, PROPERTIES);
+        desktop.add(janelinha);
+        try
+        {
+            janelinha.setSelected(true);
+        } catch (PropertyVetoException ex) {}
+    }
+    
     public void adicionarJanelaInterna(JanelaInterna j)
     {
         desktop.add(j);
@@ -118,12 +128,17 @@ public class Janela extends JFrame
         JMenuItem soma = new JMenuItem("Lógicas e Aritméticas");
         soma.setActionCommand("oper");
         
+        //adicionadas no JMenu histograma/equalização
+        JMenuItem histograma = new JMenuItem("Histograma/Equalização");
+        histograma.setActionCommand("histograma");
+        
         arquivo.add(abrir);
         arquivo.add(salvar);        
         arquivo.add(toolbar);
 
         operacoes.add(soma);
         operacoes.add(grayscale);
+        operacoes.add(histograma);
 
         barra.add(arquivo);
         barra.add(operacoes);
@@ -132,6 +147,7 @@ public class Janela extends JFrame
         grayscale.addActionListener(listener);
         toolbar.addActionListener(listener);
         soma.addActionListener(listener);
+        histograma.addActionListener(listener);
 
         return barra;
     }
