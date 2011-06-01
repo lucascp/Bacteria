@@ -1,3 +1,4 @@
+import java.awt.BorderLayout;
 import java.awt.Button;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -9,6 +10,7 @@ import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JScrollPane;
 
 public class Janela extends JFrame
 {
@@ -17,6 +19,7 @@ public class Janela extends JFrame
     public static Dimension screenSize;
 
     private JDesktopPane desktop;
+    private JScrollPane scrollpane;
     private JanelaListener listener;
     private Controle controle;
     private JMenuBar toolbar;
@@ -42,9 +45,12 @@ public class Janela extends JFrame
         int inset = 50; //  usado no setBounds
         screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         setBounds(inset, inset, screenSize.width - inset * 2, screenSize.height - inset * 2);
+        getContentPane().setLayout(new BorderLayout());
 
         desktop=new JDesktopPane();
-        this.setContentPane(desktop);
+        scrollpane = new JScrollPane();
+        scrollpane.setViewportView(desktop);
+        this.add(scrollpane, BorderLayout.CENTER);
         this.setJMenuBar(criarBarraDeMenu());
         desktop.setBackground(Color.gray); //cor de fundo
 
@@ -82,13 +88,12 @@ public class Janela extends JFrame
     public JMenuBar criarToolBar()
     {
        JMenuBar toolbar = new JMenuBar();
-       toolbar.setLayout(null);
         JButton b = new JButton("Start");
         b.setBounds(5, 0, 19, 19);
         b.setBackground(Color.lightGray);
         toolbar.add(b);
         toolbar.setBounds(0, 0, screenSize.width, 20);
-        add(toolbar);
+        this.add(toolbar, BorderLayout.NORTH);
         this.toolbar=toolbar;
 
         return toolbar;
