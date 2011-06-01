@@ -5,19 +5,19 @@ import java.awt.event.ActionListener;
 public class JanelaLimiarizacaoListener implements ActionListener
 {
     Janela janela;
-    JanelaLimiarizacao janelaLimiarizacao;
+    JanelaLimiar janelaLimiar;
     
-    public JanelaLimiarizacaoListener(Janela j, JanelaLimiarizacao j2)
+    public JanelaLimiarizacaoListener(Janela j, JanelaLimiar j2)
     {
         janela=j;
-        janelaLimiarizacao=j2;
+        janelaLimiar=j2;
     }
 
     public void actionPerformed(ActionEvent e)
     {
         System.out.println(janela.getSelectedFrame().getTitle());
-        Controle.limiarBinario(janela.getSelectedFrame(), Integer.parseInt(janelaLimiarizacao.getText()));
-        janelaLimiarizacao.dispose();
+        Controle.limiarBinario(janela.getSelectedFrame(), Integer.parseInt(janelaLimiar.getText()));
+        janelaLimiar.dispose();
         
     }
 

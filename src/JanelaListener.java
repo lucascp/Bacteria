@@ -19,7 +19,7 @@ public class JanelaListener implements ActionListener {
         } else if (e.getActionCommand().equals("oper")) {
             new JChooseFrame(janela);
         } else if (e.getActionCommand().equals("limiar")) {
-            new JanelaLimiarizacao(janela);
+            new JanelaLimiar(janela);
         } else if (e.getActionCommand().equals("toolbar")) {
             if (janela.getToolBarStatus() == janela.TOOL_BAR_ON) {
                 ((JMenuItem) e.getSource()).setText("Toolbar OFF");
