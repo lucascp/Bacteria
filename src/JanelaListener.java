@@ -37,6 +37,13 @@ public class JanelaListener implements ActionListener {
                     }
                 }
             }
+        } else if (e.getActionCommand().equals("histograma"))
+        {
+            janela.abrirJanelaHistograma();
+        } else if(e.getActionCommand().equals("mostrar")) //relacionada ao JMenu Informações
+        {
+            JanelaInfo f = new JanelaInfo(janela.getSelectedFrame());
         }
+
     }
 }
