@@ -18,6 +18,8 @@ public class JanelaListener implements ActionListener {
             Controle.escalaDeCinza(janela.getSelectedFrame());
         } else if (e.getActionCommand().equals("oper")) {
             new JChooseFrame(janela);
+        } else if (e.getActionCommand().equals("limiar")) {
+            new JanelaLimiarizacao(janela);
         } else if (e.getActionCommand().equals("toolbar")) {
             if (janela.getToolBarStatus() == janela.TOOL_BAR_ON) {
                 ((JMenuItem) e.getSource()).setText("Toolbar OFF");
@@ -35,6 +37,13 @@ public class JanelaListener implements ActionListener {
                     }
                 }
             }
+        } else if (e.getActionCommand().equals("histograma"))
+        {
+            janela.abrirJanelaHistograma();
+        } else if(e.getActionCommand().equals("mostrar")) //relacionada ao JMenu Informações
+        {
+            JanelaInfo f = new JanelaInfo(janela.getSelectedFrame());
         }
+
     }
 }

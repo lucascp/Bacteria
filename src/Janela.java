@@ -1,5 +1,3 @@
-
-import java.awt.Button;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Toolkit;
@@ -67,12 +65,9 @@ public class Janela extends JFrame
 
     public void abrirJanelaHistograma()
     {
-        JanelaHistograma janelinha = new JanelaHistograma(red, green, blue, gray, SOMEBITS, PROPERTIES);
-        desktop.add(janelinha);
-        try
-        {
-            janelinha.setSelected(true);
-        } catch (PropertyVetoException ex) {}
+        JanelaInterna janelinha0 = getSelectedFrame();
+        if (janelinha0 == null) return;
+        JanelaHistograma janelinha = new JanelaHistograma(this, janelinha0.getRed(), janelinha0.getGreen(), janelinha0.getBlue(), null, janelinha0.getAlturaImagem(), janelinha0.getLarguraImagem());
     }
     
     public void adicionarJanelaInterna(JanelaInterna j)
@@ -121,12 +116,15 @@ public class Janela extends JFrame
         JMenuItem grayscale = new JMenuItem("Grayscale");
         grayscale.setActionCommand("gray");
 
-        JMenuItem toolbar = new JMenuItem("Toolbar ON");
-        toolbar.setActionCommand("toolbar");
+        JMenuItem jtoolbar = new JMenuItem("Toolbar ON");
+        jtoolbar.setActionCommand("toolbar");
 
         //adicionadas no JMenu operacoes
         JMenuItem soma = new JMenuItem("Lógicas e Aritméticas");
         soma.setActionCommand("oper");
+
+        JMenuItem limiar = new JMenuItem("Limiarização");
+        limiar.setActionCommand("limiar");
         
         //adicionadas no JMenu histograma/equalização
         JMenuItem histograma = new JMenuItem("Histograma/Equalização");
@@ -134,10 +132,11 @@ public class Janela extends JFrame
         
         arquivo.add(abrir);
         arquivo.add(salvar);        
-        arquivo.add(toolbar);
+        arquivo.add(jtoolbar);
 
         operacoes.add(soma);
         operacoes.add(grayscale);
+        operacoes.add(limiar);
         operacoes.add(histograma);
 
         barra.add(arquivo);
@@ -145,10 +144,20 @@ public class Janela extends JFrame
 
         abrir.addActionListener(listener);
         grayscale.addActionListener(listener);
-        toolbar.addActionListener(listener);
+        jtoolbar.addActionListener(listener);
         soma.addActionListener(listener);
+        limiar.addActionListener(listener);
         histograma.addActionListener(listener);
 
+        JMenu info = new JMenu("Informações"); //Adicionado por G.
+
+        JMenuItem mostrar = new JMenuItem("Mostrar...");//info
+        mostrar.setActionCommand("mostrar");
+        info.add(mostrar); //info
+        barra.add(info); //info
+        mostrar.addActionListener(listener);//info
+
+        
         return barra;
     }
 
