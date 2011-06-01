@@ -174,6 +174,7 @@ class MenuJanela extends JMenu {
     private JDesktopPane desktopPane;
     private JMenuItem cascata = new JMenuItem("Cascata");
     private JMenuItem ladoALado = new JMenuItem("Lado a Lado");
+    private static int FRAME_OFFSET = 35;
 
     public MenuJanela(JDesktopPane desktopPane) {
         this.desktopPane = desktopPane;
@@ -199,6 +200,40 @@ class MenuJanela extends JMenu {
         JInternalFrame janelas[] = desktopPane.getAllFrames();
 
         add(cascata);
+
+        cascata.addActionListener(new ActionListener() {
+
+            public void actionPerformed(ActionEvent ae) {
+                JInternalFrame janelas[] = desktopPane.getAllFrames();
+
+                int x = 0;
+                int y = 0;
+
+                for (int i = janelas.length - 1; i >= 0; i--) {
+                    JInternalFrame janela = janelas[i];
+                    janela.setLocation(x, y);
+                    x = x + FRAME_OFFSET;
+                    y = y + FRAME_OFFSET;
+                }
+            }
+        });
+
+        ladoALado.addActionListener(new ActionListener() {
+
+            public void actionPerformed(ActionEvent ae) {
+                JInternalFrame janelas[] = desktopPane.getAllFrames();
+
+                int frameHeight = desktopPane.getBounds().height / janelas.length;
+                int y = 0;
+                for (JInternalFrame janela : janelas) {
+                    janela.setSize(desktopPane.getBounds().width, frameHeight);
+                    janela.setLocation(0, y);
+                    y += frameHeight;
+                }
+            }
+        });
+
+
         add(ladoALado);
 
         if (janelas.length > 0) {
