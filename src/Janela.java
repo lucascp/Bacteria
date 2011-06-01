@@ -3,14 +3,21 @@ import java.awt.Button;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.beans.PropertyVetoException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JDesktopPane;
 import javax.swing.JFrame;
+import javax.swing.JInternalFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JScrollPane;
+import javax.swing.event.MenuEvent;
+import javax.swing.event.MenuListener;
 
 public class Janela extends JFrame
 {
@@ -135,6 +142,7 @@ public class Janela extends JFrame
 
         barra.add(arquivo);
         barra.add(operacoes);
+        barra.add(new MenuJanela(desktop));
 
         abrir.addActionListener(listener);
         grayscale.addActionListener(listener);
@@ -159,4 +167,76 @@ public class Janela extends JFrame
         this.toolBarStatus = toolBarStatus;
     }
 
+}
+
+class MenuJanela extends JMenu {
+
+    private JDesktopPane desktopPane;
+    private JMenuItem cascata = new JMenuItem("Cascata");
+    private JMenuItem ladoALado = new JMenuItem("Lado a Lado");
+
+    public MenuJanela(JDesktopPane desktopPane) {
+        this.desktopPane = desktopPane;
+
+        setText("Janela");
+
+        addMenuListener(new MenuListener() {
+
+            public void menuSelected(MenuEvent me) {
+                buildChildMenus();
+            }
+
+            public void menuDeselected(MenuEvent me) {
+                removeAll();
+            }
+
+            public void menuCanceled(MenuEvent me) {
+            }
+        });
+    }
+
+    private void buildChildMenus() {
+        JInternalFrame janelas[] = desktopPane.getAllFrames();
+
+        add(cascata);
+        add(ladoALado);
+
+        if (janelas.length > 0) {
+            addSeparator();
+        }
+
+        cascata.setEnabled(janelas.length > 0);
+        ladoALado.setEnabled(janelas.length > 0);
+
+        for (JInternalFrame janela : janelas) {
+            MenuJanelaItem menuItem = new MenuJanelaItem(janela);
+            menuItem.addActionListener(new ActionListener() {
+
+                public void actionPerformed(ActionEvent ae) {
+                    JInternalFrame frame = ((MenuJanelaItem) ae.getSource()).getFrame();
+                    frame.toFront();
+                    try {
+                        frame.setSelected(true);
+                    } catch (PropertyVetoException ex) {
+                        Logger.getLogger(MenuJanela.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            });
+            add(menuItem);
+        }
+    }
+
+    class MenuJanelaItem extends JMenuItem {
+
+        private JInternalFrame frame;
+
+        public MenuJanelaItem(JInternalFrame frame) {
+            super(frame.getTitle());
+            this.frame = frame;
+        }
+
+        private JInternalFrame getFrame() {
+            return this.frame;
+        }
+    }
 }
