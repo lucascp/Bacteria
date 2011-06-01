@@ -1,13 +1,23 @@
+import java.awt.BorderLayout;
+import java.awt.Button;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.beans.PropertyVetoException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JDesktopPane;
 import javax.swing.JFrame;
+import javax.swing.JInternalFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JScrollPane;
+import javax.swing.event.MenuEvent;
+import javax.swing.event.MenuListener;
 
 public class Janela extends JFrame
 {
@@ -16,6 +26,7 @@ public class Janela extends JFrame
     public static Dimension screenSize;
 
     private JDesktopPane desktop;
+    private JScrollPane scrollpane;
     private JanelaListener listener;
     private Controle controle;
     private JMenuBar toolbar;
@@ -41,9 +52,12 @@ public class Janela extends JFrame
         int inset = 50; //  usado no setBounds
         screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         setBounds(inset, inset, screenSize.width - inset * 2, screenSize.height - inset * 2);
+        getContentPane().setLayout(new BorderLayout());
 
         desktop=new JDesktopPane();
-        this.setContentPane(desktop);
+        scrollpane = new JScrollPane();
+        scrollpane.setViewportView(desktop);
+        this.add(scrollpane, BorderLayout.CENTER);
         this.setJMenuBar(criarBarraDeMenu());
         desktop.setBackground(Color.gray); //cor de fundo
 
@@ -88,13 +102,12 @@ public class Janela extends JFrame
     public JMenuBar criarToolBar()
     {
        JMenuBar toolbar = new JMenuBar();
-       toolbar.setLayout(null);
         JButton b = new JButton("Start");
         b.setBounds(5, 0, 19, 19);
         b.setBackground(Color.lightGray);
         toolbar.add(b);
         toolbar.setBounds(0, 0, screenSize.width, 20);
-        add(toolbar);
+        this.add(toolbar, BorderLayout.NORTH);
         this.toolbar=toolbar;
 
         return toolbar;
@@ -141,6 +154,7 @@ public class Janela extends JFrame
 
         barra.add(arquivo);
         barra.add(operacoes);
+        barra.add(new MenuJanela(desktop));
 
         abrir.addActionListener(listener);
         grayscale.addActionListener(listener);
@@ -175,4 +189,111 @@ public class Janela extends JFrame
         this.toolBarStatus = toolBarStatus;
     }
 
+}
+
+class MenuJanela extends JMenu {
+
+    private JDesktopPane desktopPane;
+    private JMenuItem cascata = new JMenuItem("Cascata");
+    private JMenuItem ladoALado = new JMenuItem("Lado a Lado");
+    private static int FRAME_OFFSET = 35;
+
+    public MenuJanela(JDesktopPane desktopPane) {
+        this.desktopPane = desktopPane;
+
+        setText("Janela");
+
+        addMenuListener(new MenuListener() {
+
+            public void menuSelected(MenuEvent me) {
+                buildChildMenus();
+            }
+
+            public void menuDeselected(MenuEvent me) {
+                removeAll();
+            }
+
+            public void menuCanceled(MenuEvent me) {
+            }
+        });
+    }
+
+    private void buildChildMenus() {
+        JInternalFrame janelas[] = desktopPane.getAllFrames();
+
+        add(cascata);
+
+        cascata.addActionListener(new ActionListener() {
+
+            public void actionPerformed(ActionEvent ae) {
+                JInternalFrame janelas[] = desktopPane.getAllFrames();
+
+                int x = 0;
+                int y = 0;
+
+                for (int i = janelas.length - 1; i >= 0; i--) {
+                    JInternalFrame janela = janelas[i];
+                    janela.setLocation(x, y);
+                    x = x + FRAME_OFFSET;
+                    y = y + FRAME_OFFSET;
+                }
+            }
+        });
+
+        ladoALado.addActionListener(new ActionListener() {
+
+            public void actionPerformed(ActionEvent ae) {
+                JInternalFrame janelas[] = desktopPane.getAllFrames();
+
+                int frameHeight = desktopPane.getBounds().height / janelas.length;
+                int y = 0;
+                for (JInternalFrame janela : janelas) {
+                    janela.setSize(desktopPane.getBounds().width, frameHeight);
+                    janela.setLocation(0, y);
+                    y += frameHeight;
+                }
+            }
+        });
+
+
+        add(ladoALado);
+
+        if (janelas.length > 0) {
+            addSeparator();
+        }
+
+        cascata.setEnabled(janelas.length > 0);
+        ladoALado.setEnabled(janelas.length > 0);
+
+        for (JInternalFrame janela : janelas) {
+            MenuJanelaItem menuItem = new MenuJanelaItem(janela);
+            menuItem.addActionListener(new ActionListener() {
+
+                public void actionPerformed(ActionEvent ae) {
+                    JInternalFrame frame = ((MenuJanelaItem) ae.getSource()).getFrame();
+                    frame.toFront();
+                    try {
+                        frame.setSelected(true);
+                    } catch (PropertyVetoException ex) {
+                        Logger.getLogger(MenuJanela.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            });
+            add(menuItem);
+        }
+    }
+
+    class MenuJanelaItem extends JMenuItem {
+
+        private JInternalFrame frame;
+
+        public MenuJanelaItem(JInternalFrame frame) {
+            super(frame.getTitle());
+            this.frame = frame;
+        }
+
+        private JInternalFrame getFrame() {
+            return this.frame;
+        }
+    }
 }
