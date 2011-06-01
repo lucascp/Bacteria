@@ -111,27 +111,32 @@ public class Janela extends JFrame
         JMenuItem grayscale = new JMenuItem("Grayscale");
         grayscale.setActionCommand("gray");
 
-        JMenuItem toolbar = new JMenuItem("Toolbar ON");
-        toolbar.setActionCommand("toolbar");
+        JMenuItem jtoolbar = new JMenuItem("Toolbar ON");
+        jtoolbar.setActionCommand("toolbar");
 
         //adicionadas no JMenu operacoes
         JMenuItem soma = new JMenuItem("Lógicas e Aritméticas");
         soma.setActionCommand("oper");
+
+        JMenuItem limiar = new JMenuItem("Limiarização");
+        limiar.setActionCommand("limiar");
         
         arquivo.add(abrir);
         arquivo.add(salvar);        
-        arquivo.add(toolbar);
+        arquivo.add(jtoolbar);
 
         operacoes.add(soma);
         operacoes.add(grayscale);
+        operacoes.add(limiar);
 
         barra.add(arquivo);
         barra.add(operacoes);
 
         abrir.addActionListener(listener);
         grayscale.addActionListener(listener);
-        toolbar.addActionListener(listener);
+        jtoolbar.addActionListener(listener);
         soma.addActionListener(listener);
+        limiar.addActionListener(listener);
 
         return barra;
     }

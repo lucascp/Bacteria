@@ -90,16 +90,40 @@ public class JanelaInterna extends JInternalFrame {
         setSize(larguraImagem+20, alturaImagem+40);
     }
 
-    public float[][] getBlue() {
-        return blue;
+    public float[][] getBlue() // Em java as matrizes são tratadas como ponteiros, então com esse método retorna uma cópia
+    {
+        float [][] maux = new float[larguraImagem][alturaImagem];
+        
+        for(int i=0;i<larguraImagem;i++)
+        {
+            System.arraycopy(blue[i], 0, maux[i], 0, alturaImagem);
+        }
+        
+        return maux;
     }
 
-    public float[][] getGreen() {
-        return green;
+    public float[][] getGreen() 
+    {
+        float [][] maux = new float[larguraImagem][alturaImagem];
+        
+        for(int i=0;i<larguraImagem;i++)
+        {
+            System.arraycopy(green[i], 0, maux[i], 0, alturaImagem);
+        }
+        
+        return maux;
     }
 
-    public float[][] getRed() {
-        return red;
+    public float[][] getRed() 
+    {
+        float [][] maux = new float[larguraImagem][alturaImagem];
+        
+        for(int i=0;i<larguraImagem;i++)
+        {
+            System.arraycopy(red[i], 0, maux[i], 0, alturaImagem);
+        }
+        
+        return maux;
     }
 
     public void setMatrizRed(float [][] red)
