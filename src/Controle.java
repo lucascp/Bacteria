@@ -1,6 +1,4 @@
-
-
-
+//Controle
 public class Controle // classe com métodos estáticos para realizar as operacoes de Imagem
 {
     private static Janela janela;
