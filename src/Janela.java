@@ -128,7 +128,9 @@ public class Janela extends JFrame
         JMenuBar barra = new JMenuBar();
 
         JMenu arquivo = new JMenu("Arquivo");
+        arquivo.setMnemonic('a');
         JMenu operacoes = new JMenu("Operações");
+        operacoes.setMnemonic('o');
 
         //adicionadas no JMenu arquivo
         JMenuItem abrir = new JMenuItem("Abrir...");
@@ -174,6 +176,7 @@ public class Janela extends JFrame
         histograma.addActionListener(listener);
 
         JMenu info = new JMenu("Informações"); //Adicionado por G.
+        info.setMnemonic('i');
 
         JMenuItem mostrar = new JMenuItem("Mostrar...");//info
         mostrar.setActionCommand("mostrar");
@@ -212,6 +215,7 @@ class MenuJanela extends JMenu {
         this.desktopPane = desktopPane;
 
         setText("Janela");
+        setMnemonic('j');
 
         addMenuListener(new MenuListener() {
 
