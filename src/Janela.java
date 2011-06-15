@@ -119,6 +119,7 @@ public class Janela extends JFrame
 
         JMenu arquivo = new JMenu("Arquivo");
         JMenu operacoes = new JMenu("Operações");
+        JMenu visualizar = new JMenu("Visualizar");
 
         //adicionadas no JMenu arquivo
         JMenuItem abrir = new JMenuItem("Abrir...");
@@ -131,6 +132,12 @@ public class Janela extends JFrame
 
         JMenuItem jtoolbar = new JMenuItem("Toolbar ON");
         jtoolbar.setActionCommand("toolbar");
+
+        //adicionadas no JMenu Visualizar
+        JMenuItem zoomIn = new JMenuItem("Zoom in");
+        JMenuItem zoomOut = new JMenuItem("Zoom out");
+        zoomIn.setActionCommand("zoomin");
+        zoomOut.setActionCommand("zoomout");
 
         //adicionadas no JMenu operacoes
         JMenuItem soma = new JMenuItem("Lógicas e Aritméticas");
@@ -152,8 +159,12 @@ public class Janela extends JFrame
         operacoes.add(limiar);
         operacoes.add(histograma);
 
+        visualizar.add(zoomIn);
+        visualizar.add(zoomOut);
+
         barra.add(arquivo);
-        barra.add(operacoes);
+        barra.add(visualizar);
+        barra.add(operacoes);        
         barra.add(new MenuJanela(desktop));
 
         abrir.addActionListener(listener);
@@ -162,6 +173,8 @@ public class Janela extends JFrame
         soma.addActionListener(listener);
         limiar.addActionListener(listener);
         histograma.addActionListener(listener);
+        zoomIn.addActionListener(listener);
+        zoomOut.addActionListener(listener);
 
         JMenu info = new JMenu("Informações"); //Adicionado por G.
 

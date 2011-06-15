@@ -44,6 +44,14 @@ public class JanelaListener implements ActionListener {
         {
             JanelaInfo f = new JanelaInfo(janela.getSelectedFrame());
         }
+        else if(e.getActionCommand().equals("zoomin")) //relacionada ao JMenu Informações
+        {
+            Controle.zoomIn(janela.getSelectedFrame());
+        }
+        else if(e.getActionCommand().equals("zoomout")) //relacionada ao JMenu Informações
+        {
+            Controle.zoomOut(janela.getSelectedFrame());
+        }
 
     }
 }
