@@ -17,6 +17,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JScrollPane;
+import javax.swing.JToolBar;
 import javax.swing.UIManager;
 import javax.swing.event.MenuEvent;
 import javax.swing.event.MenuListener;
@@ -31,7 +32,7 @@ public class Janela extends JFrame
     private JScrollPane scrollpane;
     private JanelaListener listener;
     private Controle controle;
-    private JMenuBar toolbar;
+    private JToolBar toolbar;
 
     public static Dimension getScreenSize() {
         return screenSize;
@@ -103,20 +104,16 @@ public class Janela extends JFrame
     }
 
 
-    public JMenuBar criarToolBar()
+    public JToolBar criarToolBar()
     {
-        Insets buttonMargin = new Insets(2, 2, 2, 2);
-        
-        toolbar = new JMenuBar();
+        toolbar = new JToolBar();
         
         JButton b = new JButton(UIManager.getIcon("FileView.directoryIcon"));
-        b.setMargin(buttonMargin);
         b.setActionCommand("abrir");
         b.addActionListener(listener);
         toolbar.add(b);
         
         b = new JButton(UIManager.getIcon("FileView.floppyDriveIcon"));
-        b.setMargin(buttonMargin);
         //b.setActionCommand("salvar"); // TODO
         b.addActionListener(listener);
         toolbar.add(b);
@@ -192,7 +189,7 @@ public class Janela extends JFrame
         return toolBarStatus;
     }
 
-    public JMenuBar getToolBar()
+    public JToolBar getToolBar()
     {
         return toolbar;
     }
