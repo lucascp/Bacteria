@@ -70,7 +70,9 @@ public class Janela extends JFrame
     public void abrirJanelaInterna()
     {
         JanelaInterna janelinha = new JanelaInterna(this);
-        janelinha.abrirImagem();
+        if(!janelinha.abrirImagem()) {
+            return;
+        }
         desktop.add(janelinha);
         try {
             janelinha.setSelected(true);

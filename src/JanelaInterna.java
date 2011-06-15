@@ -65,10 +65,18 @@ public class JanelaInterna extends JInternalFrame {
 
 
 
-    public void abrirImagem()
+    /**
+     * Abre um JFileChooser para o usuário escolher a imagem e abre-a.
+     * Retorna true se a imagem tiver sido carregada com sucesso, false se não.
+     * @return true se a imagem tiver sido carregada, false se não
+     */
+    public boolean abrirImagem()
     {
         JFileChooser chooser = new JFileChooser();
-        chooser.showOpenDialog(this);
+        if(chooser.showOpenDialog(this) != JFileChooser.APPROVE_OPTION) {
+            // A janela de abrir imagem foi cancelada ou houve algum erro misterioso
+            return false;
+        }
         this.setTitle(chooser.getSelectedFile().getName()); // faz a janela escrever o nome do arquivo
 
         try {
@@ -88,6 +96,9 @@ public class JanelaInterna extends JInternalFrame {
         JScrollPane pane = new JScrollPane(l);        
         add(pane);
         setSize(larguraImagem+20, alturaImagem+40);
+
+        // tudo ok :)
+        return true;
     }
 
     public float[][] getBlue() // Em java as matrizes são tratadas como ponteiros, então com esse método retorna uma cópia
