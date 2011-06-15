@@ -22,11 +22,9 @@ public class JanelaListener implements ActionListener {
             new JanelaLimiar(janela);
         } else if (e.getActionCommand().equals("toolbar")) {
             if (janela.getToolBarStatus() == janela.TOOL_BAR_ON) {
-                ((JMenuItem) e.getSource()).setText("Toolbar OFF");
                 janela.getToolBar().setVisible(false);
                 janela.setToolBarStatus(janela.TOOL_BAR_OFF);
             } else {
-                ((JMenuItem) e.getSource()).setText("Toolbar ON");
                 janela.getToolBar().setVisible(true);
                 janela.setToolBarStatus(janela.TOOL_BAR_ON);
             }

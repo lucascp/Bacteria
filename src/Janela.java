@@ -10,6 +10,7 @@ import java.beans.PropertyVetoException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JButton;
+import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JDesktopPane;
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
@@ -17,6 +18,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JScrollPane;
+import javax.swing.JSeparator;
 import javax.swing.JToolBar;
 import javax.swing.UIManager;
 import javax.swing.event.MenuEvent;
@@ -131,18 +133,21 @@ public class Janela extends JFrame
         arquivo.setMnemonic('a');
         JMenu operacoes = new JMenu("Operações");
         operacoes.setMnemonic('o');
+        JMenu visualizar = new JMenu("Visualizar");
+        visualizar.setMnemonic('v');
 
         //adicionadas no JMenu arquivo
-        JMenuItem abrir = new JMenuItem("Abrir...");
+        JMenuItem abrir = new JMenuItem("Abrir");
         abrir.setActionCommand("abrir");
 
-        JMenuItem salvar = new JMenuItem("Salvar...");
+        JMenuItem salvar = new JMenuItem("Salvar");
+        salvar.setActionCommand("abrir");
+        
+        JMenuItem sair = new JMenuItem("Sair");
+        sair.setActionCommand("sair");
 
         JMenuItem grayscale = new JMenuItem("Grayscale");
         grayscale.setActionCommand("gray");
-
-        JMenuItem jtoolbar = new JMenuItem("Toolbar ON");
-        jtoolbar.setActionCommand("toolbar");
 
         //adicionadas no JMenu operacoes
         JMenuItem soma = new JMenuItem("Lógicas e Aritméticas");
@@ -156,16 +161,26 @@ public class Janela extends JFrame
         histograma.setActionCommand("histograma");
         
         arquivo.add(abrir);
-        arquivo.add(salvar);        
-        arquivo.add(jtoolbar);
+        arquivo.add(salvar);
+        arquivo.add(new JSeparator());
+        arquivo.add(sair);
 
         operacoes.add(soma);
         operacoes.add(grayscale);
         operacoes.add(limiar);
         operacoes.add(histograma);
+        
+        //adicionadas no JMenu visualizar
+        JCheckBoxMenuItem jtoolbar = new JCheckBoxMenuItem("Barra de Ferramentas");
+        jtoolbar.setSelected(true);
+        jtoolbar.setActionCommand("toolbar");
+        
+        visualizar.add(jtoolbar);
 
+        //adiciona tudo na jtoolbar
         barra.add(arquivo);
         barra.add(operacoes);
+        barra.add(visualizar);
         barra.add(new MenuJanela(desktop));
 
         abrir.addActionListener(listener);
