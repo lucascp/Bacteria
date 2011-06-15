@@ -20,6 +20,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JToolBar;
+import javax.swing.KeyStroke;
 import javax.swing.UIManager;
 import javax.swing.event.MenuEvent;
 import javax.swing.event.MenuListener;
@@ -138,9 +139,11 @@ public class Janela extends JFrame
 
         //adicionadas no JMenu arquivo
         JMenuItem abrir = new JMenuItem("Abrir");
+        abrir.setAccelerator(KeyStroke.getKeyStroke('A', Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
         abrir.setActionCommand("abrir");
 
         JMenuItem salvar = new JMenuItem("Salvar");
+        salvar.setAccelerator(KeyStroke.getKeyStroke('S', Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
         salvar.setActionCommand("abrir");
         
         JMenuItem sair = new JMenuItem("Sair");
@@ -224,13 +227,23 @@ class MenuJanela extends JMenu {
     private JDesktopPane desktopPane;
     private JMenuItem cascata = new JMenuItem("Cascata");
     private JMenuItem ladoALado = new JMenuItem("Lado a Lado");
+    private JMenuItem fecharJanela = new JMenuItem("Fechar");
     private static int FRAME_OFFSET = 35;
 
-    public MenuJanela(JDesktopPane desktopPane) {
-        this.desktopPane = desktopPane;
+    public MenuJanela(JDesktopPane desktop) {
+        this.desktopPane = desktop;
 
         setText("Janela");
         setMnemonic('j');
+        fecharJanela.addActionListener(new ActionListener() {
+
+            public void actionPerformed(ActionEvent ae) {
+                try {
+                    desktopPane.getSelectedFrame().setClosed(true);
+                } catch (Exception ex) {}
+            }
+        });
+        fecharJanela.setAccelerator(KeyStroke.getKeyStroke('W', Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
 
         addMenuListener(new MenuListener() {
 
@@ -239,17 +252,20 @@ class MenuJanela extends JMenu {
             }
 
             public void menuDeselected(MenuEvent me) {
-                removeAll();
             }
 
             public void menuCanceled(MenuEvent me) {
             }
         });
+        
+        buildChildMenus();
     }
 
     private void buildChildMenus() {
         JInternalFrame janelas[] = desktopPane.getAllFrames();
-
+        
+        removeAll();
+        
         add(cascata);
 
         cascata.addActionListener(new ActionListener() {
@@ -310,6 +326,9 @@ class MenuJanela extends JMenu {
             });
             add(menuItem);
         }
+        
+        addSeparator();
+        add(fecharJanela);
     }
 
     class MenuJanelaItem extends JMenuItem {
