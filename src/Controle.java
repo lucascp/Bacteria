@@ -415,7 +415,7 @@ public class Controle // classe com métodos estáticos para realizar as operaco
                 c2 = -c2;
             c1 = (float)Math.sqrt((1.0f + c1) / 2.0f);
         }
-        if(dir == 1)
+        if(dir == -1)
             for(i = 0; i < nn; i++) {
                 real[i] /= nn;
                 imag[i] /= nn;
@@ -483,6 +483,12 @@ public class Controle // classe com métodos estáticos para realizar as operaco
         float [][]imag = new float[nx][ny];
         float [][]mag = new float[nx][ny];
         
+        //centraliza a transformada
+        for(i = 0; i < nx; i++)
+            for(j = 0; j < ny; j++)
+                if((i+j)%2 == 1)
+                    real[i][j] = -real[i][j];
+        
         for(i = 0; i < nx; i++)
             for(j = 0; j < ny; j++)
                 imag[i][j] = 0;
@@ -493,19 +499,18 @@ public class Controle // classe com métodos estáticos para realizar as operaco
         for(i = 0; i < nx; i++) {
             for(j = 0; j < ny; j++) {
                 mag[i][j] = (float)Math.sqrt(real[i][j]*real[i][j] + imag[i][j]*imag[i][j]);
-                System.out.print(mag[i][j] + " ");
+                //System.out.print(mag[i][j] + " ");
             }
-            System.out.println();
+            //System.out.println();
         }
-        
-        
-        
-        
+        mag = transformacaoLog(mag, nx, ny, 1.0);
+        mag = arrumaEscala(mag, nx, ny);
+          
         JanelaInterna novaJanelaInterna = new JanelaInterna(janela);
         
-        novaJanelaInterna.setMatrizBlue(real);
-        novaJanelaInterna.setMatrizRed(real);
-        novaJanelaInterna.setMatrizGreen(real);
+        novaJanelaInterna.setMatrizBlue(mag);
+        novaJanelaInterna.setMatrizRed(mag);
+        novaJanelaInterna.setMatrizGreen(mag);
         novaJanelaInterna.setLarguraImagem(jan.getLarguraImagem());
         novaJanelaInterna.setAlturaImagem(jan.getAlturaImagem());
 
@@ -513,6 +518,34 @@ public class Controle // classe com métodos estáticos para realizar as operaco
 
         novaJanelaInterna.criarImagem();
         janela.adicionarJanelaInterna(novaJanelaInterna);
+    }
+    
+    public static float[][] arrumaEscala(float[][] m, int tamX, int tamY) {
+        float [][] r = new float[tamX][tamY];
+        float max = -1f, min = 256f;
+        int i, j;
+        for(i = 0; i < tamX; i++)
+            for(j = 0; j < tamY; j++) {
+                min = Math.min(min, m[i][j]);
+                max = Math.max(max,m[i][j]);
+            }       
+        for(i = 0; i < tamX; i++)
+            for(j = 0; j < tamY; j++)
+                r[i][j] = m[i][j] - min;
+        max -= min;
+        for(i = 0; i < tamX; i++)
+            for(j = 0; j < tamY; j++)
+                r[i][j] = 255*(r[i][j]/max);
+        return r;
+    }
+    
+    public static float[][] transformacaoLog(float[][] m, int tamX, int tamY, double c) {
+        float [][] r = new float[tamX][tamY];
+        int i, j;
+        for(i = 0; i < tamX; i++)
+            for(j = 0; j < tamY; j++)
+                r[i][j] = (float)(c*Math.log1p(m[i][j]));
+        return r;
     }
 
 }
