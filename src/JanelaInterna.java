@@ -20,7 +20,11 @@ public class JanelaInterna extends JInternalFrame {
     private float green[][];
     private float blue[][];
     private int larguraImagem, alturaImagem;
-
+    private boolean isBinary;
+    private boolean isGrayScale;
+    private boolean isFlagInicializadas;
+    
+    
     private Janela janela;
 
     boolean aux=false;
@@ -33,6 +37,7 @@ public class JanelaInterna extends JInternalFrame {
         setIconifiable(true);
         setResizable(true);
         setVisible(true);
+        isFlagInicializadas = false;
     }
 
 
@@ -185,4 +190,38 @@ public class JanelaInterna extends JInternalFrame {
             }
         }
     }
+    
+    public void inicializaFlags()
+    {
+        float eps = 1e-4f;
+        isBinary = true;
+        isGrayScale = true;
+        for (int i = 0; i < larguraImagem; i++)
+            for (int j = 0; j < alturaImagem; j++)
+            {
+                if (!(Math.abs(red[i][j] - green[i][j]) < eps && Math.abs(red[i][j] - blue[i][j]) < eps))
+                {
+                    isBinary = false;
+                    isGrayScale = false;
+                    isFlagInicializadas = true;
+                    return;
+                }
+                if (Math.abs(red[i][j] - 0.0f) > eps && Math.abs(red[i][j] - 255.0f) > eps)
+                    isBinary = false;
+            }
+        isFlagInicializadas = true;
+    }
+
+    public boolean isGrayScale()
+    {
+        if (!isFlagInicializadas)
+            inicializaFlags();
+        return isGrayScale;
+    }
+    public boolean isBinary()
+    {
+        if (!isFlagInicializadas)
+            inicializaFlags();
+        return isBinary;
+    }    
 }
