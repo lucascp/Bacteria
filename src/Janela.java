@@ -143,6 +143,9 @@ public class Janela extends JFrame
         JMenuItem histograma = new JMenuItem("Histograma/Equalização");
         histograma.setActionCommand("histograma");
         
+        JMenuItem fft = new JMenuItem("FFT");
+        fft.setActionCommand("fft");
+        
         arquivo.add(abrir);
         arquivo.add(salvar);        
         arquivo.add(jtoolbar);
@@ -151,6 +154,7 @@ public class Janela extends JFrame
         operacoes.add(grayscale);
         operacoes.add(limiar);
         operacoes.add(histograma);
+        operacoes.add(fft);
 
         barra.add(arquivo);
         barra.add(operacoes);
@@ -162,6 +166,7 @@ public class Janela extends JFrame
         soma.addActionListener(listener);
         limiar.addActionListener(listener);
         histograma.addActionListener(listener);
+        fft.addActionListener(listener);
 
         JMenu info = new JMenu("Informações"); //Adicionado por G.
 

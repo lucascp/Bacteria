@@ -1,3 +1,6 @@
+
+import javax.swing.JOptionPane;
+
 //Controle
 public class Controle // classe com métodos estáticos para realizar as operacoes de Imagem
 {
@@ -357,6 +360,159 @@ public class Controle // classe com métodos estáticos para realizar as operaco
 
         }
         return matriz;
+    }
+    
+    private static void fft(float real[], float imag[], int dir, int m) {
+        int nn, aux, i, j, k, l, l1, l2;
+        float sx, sy, c1, c2, u1, u2, t1, t2, z;
+        
+        nn = (int)Math.pow(2,m);
+        
+        aux = nn >> 1;
+        j = 0;
+        for(i = 0; i < nn-1; i++) {
+            if(i < j) {
+                sx = real[i];
+                sy = imag[i];
+                real[i] = real[j];
+                imag[i] = imag[j];
+                real[j] = sx;
+                imag[j] = sy;
+            }
+            k = aux;
+            while(k <= j) {
+                j -= k;
+                k >>= 1;
+            }
+            j += k;
+        }
+        
+        
+        c1 = -1.0f;
+        c2 = 0.0f;
+        l2 = 1;
+        for(k = 0; k < m; k++) {
+            l1 = l2;
+            l2 <<= 1;
+            u1 = 1.0f;
+            u2 = 0.0f;
+            for(j = 0; j < l1; j++) {
+                for(i = j; i < nn; i+= l2) {
+                    aux = i + l1;
+                    t1 = u1 * real[aux] - u2 * imag[aux];
+                    t2 = u1 * imag[aux] - u2 * real[aux];
+                    real[aux] = real[i] - t1;
+                    imag[aux] = imag[i] - t2;
+                    real[i] += t1;
+                    imag[i] += t2;
+                }
+                z = (u1 * c1) - (u2 * c2);
+                u2 = (u1 * c2) + (u2 * c1);
+                u1 = z;
+            }
+            c2 = (float)Math.sqrt((1.0f - c1) / 2.0f);
+            if(dir == 1)
+                c2 = -c2;
+            c1 = (float)Math.sqrt((1.0f + c1) / 2.0f);
+        }
+        if(dir == 1)
+            for(i = 0; i < nn; i++) {
+                real[i] /= nn;
+                imag[i] /= nn;
+            }
+        
+    }
+    
+    private static void fft2d(float realPart[][], float imagPart[][], int nx, int ny, int dir) {
+        int i, j, m1, m2;
+        float [] real, imag;
+        
+        m1 = m2 = 0;
+        i = nx;
+        while(i%2 == 0) {
+            i /= 2;
+            m1++;
+        }
+        j = ny;
+        while(j%2 == 0) {
+            j /= 2;
+            m2++;
+        }
+        if(i != 1 || j != 1) {
+            JOptionPane.showMessageDialog(null, "Erro: Dimensões diferentes de potência de 2!");
+        }
+        
+        
+        //linhas
+        real = new float[nx];
+        imag = new float[nx];
+        for(j = 0; j < ny; j++) {
+            for(i = 0; i < nx; i++) {
+                real[i] = realPart[i][j];
+                imag[i] = imagPart[i][j];
+            }
+            fft(real,imag,dir,m1);
+            for(i = 0; i < nx; i++) {
+                realPart[i][j] = real[i];
+                imagPart[i][j] = imag[i];
+            }
+        }
+        
+        
+        //colunas
+        real = new float[ny];
+        imag = new float[ny];
+        for(i = 0; i < nx; i++) {
+            for(j = 0; j < ny; j++) {
+                real[j] = realPart[i][j];
+                imag[j] = imagPart[i][j];
+            }
+            fft(real,imag,dir,m2);
+            for(j = 0; j < ny; j++) {
+                realPart[i][j] = real[j];
+                imagPart[i][j] = imag[j];
+            }
+        }
+    }
+    
+    public static void fftDireta(JanelaInterna jan) {
+        int i, j;
+        int nx = jan.getLarguraImagem();
+        int ny = jan.getAlturaImagem();
+        float [][]real = jan.getRed();
+        float [][]imag = new float[nx][ny];
+        float [][]mag = new float[nx][ny];
+        
+        for(i = 0; i < nx; i++)
+            for(j = 0; j < ny; j++)
+                imag[i][j] = 0;
+        
+        fft2d(real, imag, nx, ny, 1);
+        
+        
+        for(i = 0; i < nx; i++) {
+            for(j = 0; j < ny; j++) {
+                mag[i][j] = (float)Math.sqrt(real[i][j]*real[i][j] + imag[i][j]*imag[i][j]);
+                System.out.print(mag[i][j] + " ");
+            }
+            System.out.println();
+        }
+        
+        
+        
+        
+        JanelaInterna novaJanelaInterna = new JanelaInterna(janela);
+        
+        novaJanelaInterna.setMatrizBlue(real);
+        novaJanelaInterna.setMatrizRed(real);
+        novaJanelaInterna.setMatrizGreen(real);
+        novaJanelaInterna.setLarguraImagem(jan.getLarguraImagem());
+        novaJanelaInterna.setAlturaImagem(jan.getAlturaImagem());
+
+        novaJanelaInterna.setTitle("FFT de "+jan.getTitle());
+
+        novaJanelaInterna.criarImagem();
+        janela.adicionarJanelaInterna(novaJanelaInterna);
     }
 
 }
