@@ -144,7 +144,7 @@ public class Janela extends JFrame
 
         JMenuItem salvar = new JMenuItem("Salvar");
         salvar.setAccelerator(KeyStroke.getKeyStroke('S', Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
-        salvar.setActionCommand("abrir");
+        salvar.setActionCommand("salvar");
         
         JMenuItem sair = new JMenuItem("Sair");
         sair.setActionCommand("sair");
@@ -187,6 +187,8 @@ public class Janela extends JFrame
         barra.add(new MenuJanela(desktop));
 
         abrir.addActionListener(listener);
+        salvar.addActionListener(listener);
+        sair.addActionListener(listener);
         grayscale.addActionListener(listener);
         jtoolbar.addActionListener(listener);
         soma.addActionListener(listener);
