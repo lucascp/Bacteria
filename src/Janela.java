@@ -138,6 +138,8 @@ public class Janela extends JFrame
         operacoes.setMnemonic('o');
         JMenu visualizar = new JMenu("Visualizar");
         visualizar.setMnemonic('v');
+        JMenu morfologia = new JMenu("Morfologia matemática");
+        morfologia.setMnemonic('m');
 
         //adicionadas no JMenu arquivo
         JMenuItem abrir = new JMenuItem("Abrir");
@@ -182,17 +184,54 @@ public class Janela extends JFrame
 
         JMenuItem zoomIn = new JMenuItem("Zoom in");
         JMenuItem zoomOut = new JMenuItem("Zoom out");
+        JMenuItem info = new JMenuItem("Informações"); //Adicionado por G.
         zoomIn.setActionCommand("zoomin");
         zoomOut.setActionCommand("zoomout");
+        info.setActionCommand("mostrar");
         
         visualizar.add(jtoolbar);
         visualizar.add(zoomIn);
         visualizar.add(zoomOut);
+        visualizar.add(info);
+
+        //adicionadas ao JMenu morfologia
+        JMenu erosao = new JMenu("Erosão");
+        JMenu dilatacao = new JMenu("Dilatação");
+        JMenu abertura = new JMenu("Abertura");
+        JMenu fechamento = new JMenu("Fechamento");
+        JMenuItem gray[]=new JMenuItem[4];
+        JMenuItem bin[]=new JMenuItem[4];
+
+        for(int i=0;i<gray.length;i++)
+        {
+            gray[i]=new JMenuItem("Escala de cinza");
+            bin[i]=new JMenuItem("Binário");
+        }
+        erosao.add(bin[0]);erosao.add(gray[0]);
+        dilatacao.add(bin[1]);dilatacao.add(gray[1]);
+        abertura.add(bin[2]);abertura.add(gray[2]);
+        fechamento.add(bin[3]);fechamento.add(gray[3]);
+        bin[0].setActionCommand("erosaobin");
+        bin[1].setActionCommand("dilatacaobin");
+        bin[2].setActionCommand("aberturabin");
+        bin[3].setActionCommand("fechamentobin");
+        gray[0].setActionCommand("erosaogray");
+        gray[1].setActionCommand("dilatacaogray");
+        gray[2].setActionCommand("aberturagray");
+        gray[3].setActionCommand("fechamentogray");
+        
+        morfologia.add(erosao);
+        morfologia.add(dilatacao);
+        morfologia.add(abertura);
+        morfologia.add(fechamento);
+        
+
 
         //adiciona tudo na jtoolbar
         barra.add(arquivo);
         barra.add(operacoes);
         barra.add(visualizar);
+        barra.add(morfologia);
         barra.add(new MenuJanela(desktop));
 
         abrir.addActionListener(listener);
@@ -205,15 +244,7 @@ public class Janela extends JFrame
         histograma.addActionListener(listener);
         zoomIn.addActionListener(listener);
         zoomOut.addActionListener(listener);
-
-        JMenu info = new JMenu("Informações"); //Adicionado por G.
-        info.setMnemonic('i');
-
-        JMenuItem mostrar = new JMenuItem("Mostrar...");//info
-        mostrar.setActionCommand("mostrar");
-        info.add(mostrar); //info
-        barra.add(info); //info
-        mostrar.addActionListener(listener);//info
+        info.addActionListener(listener);
 
         
         return barra;
