@@ -2,6 +2,7 @@ import java.awt.BorderLayout;
 import java.awt.Button;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Insets;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -16,6 +17,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JScrollPane;
+import javax.swing.UIManager;
 import javax.swing.event.MenuEvent;
 import javax.swing.event.MenuListener;
 
@@ -103,14 +105,23 @@ public class Janela extends JFrame
 
     public JMenuBar criarToolBar()
     {
-       JMenuBar toolbar = new JMenuBar();
-        JButton b = new JButton("Start");
-        b.setBounds(5, 0, 19, 19);
-        b.setBackground(Color.lightGray);
+        Insets buttonMargin = new Insets(2, 2, 2, 2);
+        
+        toolbar = new JMenuBar();
+        
+        JButton b = new JButton(UIManager.getIcon("FileView.directoryIcon"));
+        b.setMargin(buttonMargin);
+        b.setActionCommand("abrir");
+        b.addActionListener(listener);
         toolbar.add(b);
-        toolbar.setBounds(0, 0, screenSize.width, 20);
+        
+        b = new JButton(UIManager.getIcon("FileView.floppyDriveIcon"));
+        b.setMargin(buttonMargin);
+        //b.setActionCommand("salvar"); // TODO
+        b.addActionListener(listener);
+        toolbar.add(b);
+        
         this.add(toolbar, BorderLayout.NORTH);
-        this.toolbar=toolbar;
 
         return toolbar;
     }
