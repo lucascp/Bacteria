@@ -109,6 +109,46 @@ public class Controle // classe com métodos estáticos para realizar as operaco
         novaJanelaInterna.criarImagem();
         janela.adicionarJanelaInterna(novaJanelaInterna);
     }
+    public static void zoomIn(JanelaInterna j1)
+    {
+        JanelaInterna novaJanelaInterna = new JanelaInterna(janela);
+
+        int largura = j1.getLarguraImagem();
+        int altura = j1.getAlturaImagem();
+
+        float matrizBlue[][]=zoomIn(j1.getBlue(), largura, altura);
+        float matrizRed[][]=zoomIn(j1.getRed(), largura, altura);
+        float matrizGreen[][]=zoomIn(j1.getGreen(), largura, altura);
+
+        novaJanelaInterna.setMatrizBlue(matrizBlue);
+        novaJanelaInterna.setMatrizRed(matrizRed);
+        novaJanelaInterna.setMatrizGreen(matrizGreen);
+        novaJanelaInterna.setLarguraImagem(largura*2);
+        novaJanelaInterna.setAlturaImagem(altura*2);
+        novaJanelaInterna.setTitle("Zoom in de " +j1.getTitle());
+        novaJanelaInterna.criarImagem();
+        janela.adicionarJanelaInterna(novaJanelaInterna);
+    }
+    public static void zoomOut(JanelaInterna j1)
+    {
+        JanelaInterna novaJanelaInterna = new JanelaInterna(janela);
+
+        int largura = j1.getLarguraImagem();
+        int altura = j1.getAlturaImagem();
+
+        float matrizBlue[][]=zoomOut(j1.getBlue(), largura, altura);
+        float matrizRed[][]=zoomOut(j1.getRed(), largura, altura);
+        float matrizGreen[][]=zoomOut(j1.getGreen(), largura, altura);
+
+        novaJanelaInterna.setMatrizBlue(matrizBlue);
+        novaJanelaInterna.setMatrizRed(matrizRed);
+        novaJanelaInterna.setMatrizGreen(matrizGreen);
+        novaJanelaInterna.setLarguraImagem(largura/2);
+        novaJanelaInterna.setAlturaImagem(altura/2);
+        novaJanelaInterna.setTitle("Zoom out de " +j1.getTitle());
+        novaJanelaInterna.criarImagem();
+        janela.adicionarJanelaInterna(novaJanelaInterna);
+    }
     
     public static void nor(JanelaInterna j1, JanelaInterna j2)
     {        
@@ -249,6 +289,99 @@ public class Controle // classe com métodos estáticos para realizar as operaco
         novaJanelaInterna.criarImagem();
         janela.adicionarJanelaInterna(novaJanelaInterna);
     }
+    public static void limiarToWhite(JanelaInterna j1, int limiar)
+    {
+        JanelaInterna novaJanelaInterna = new JanelaInterna(janela);
+
+        float matrizBlue[][]=j1.getBlue();
+        float matrizRed[][]=j1.getRed();
+        float matrizGreen[][]=j1.getGreen();
+
+        for(int i=0;i<j1.getLarguraImagem();i++)
+        {
+            for(int j=0;j<j1.getAlturaImagem();j++)
+            {
+                matrizBlue[i][j]=matrizBlue[i][j]>=limiar?255:matrizBlue[i][j];
+                matrizGreen[i][j]=matrizGreen[i][j]>=limiar?255:matrizGreen[i][j];
+                matrizRed[i][j]=matrizRed[i][j]>=limiar?255:matrizRed[i][j];
+            }
+        }
+
+        novaJanelaInterna.setMatrizBlue(matrizBlue);
+        novaJanelaInterna.setMatrizRed(matrizRed);
+        novaJanelaInterna.setMatrizGreen(matrizGreen);
+        novaJanelaInterna.setLarguraImagem(j1.getLarguraImagem());
+        novaJanelaInterna.setAlturaImagem(j1.getAlturaImagem());
+        novaJanelaInterna.setTitle("Limiarizacao de " +limiar+" em " + j1.getTitle());
+        novaJanelaInterna.criarImagem();
+        janela.adicionarJanelaInterna(novaJanelaInterna);
+    }
+    public static void limiarToBlack(JanelaInterna j1, int limiar)
+    {
+        JanelaInterna novaJanelaInterna = new JanelaInterna(janela);
+
+        float matrizBlue[][]=j1.getBlue();
+        float matrizRed[][]=j1.getRed();
+        float matrizGreen[][]=j1.getGreen();
+
+        for(int i=0;i<j1.getLarguraImagem();i++)
+        {
+            for(int j=0;j<j1.getAlturaImagem();j++)
+            {
+                matrizBlue[i][j]=matrizBlue[i][j]<=limiar?0:matrizBlue[i][j];
+                matrizGreen[i][j]=matrizGreen[i][j]<=limiar?0:matrizGreen[i][j];
+                matrizRed[i][j]=matrizRed[i][j]<=limiar?0:matrizRed[i][j];
+            }
+        }
+
+        novaJanelaInterna.setMatrizBlue(matrizBlue);
+        novaJanelaInterna.setMatrizRed(matrizRed);
+        novaJanelaInterna.setMatrizGreen(matrizGreen);
+        novaJanelaInterna.setLarguraImagem(j1.getLarguraImagem());
+        novaJanelaInterna.setAlturaImagem(j1.getAlturaImagem());
+        novaJanelaInterna.setTitle("Limiarizacao de " +limiar+" em " + j1.getTitle());
+        novaJanelaInterna.criarImagem();
+        janela.adicionarJanelaInterna(novaJanelaInterna);
+    }
+
+
+
+
+
+
+    /*
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     */
+
 
     
     //MÉTODOS PRIVADOS (AUXILIARES)
@@ -357,6 +490,55 @@ public class Controle // classe com métodos estáticos para realizar as operaco
 
         }
         return matriz;
+    }
+    private static float[][] zoomIn(float m1[][], int tamX, int tamY) // Por enquanto as matrizes tem que ser do mesmo tamanho
+    {
+        float matriz[][] = new float[tamX*2][tamY];
+        float matriz2[][] = new float[tamX*2][tamY*2];
+        
+        for(int i=1;i<tamX;i=i+1)
+        {
+            for(int j=1;j<tamY;j++)
+            {
+                matriz[2*i][j]=m1[i][j];
+                matriz[2*i-1][j]=m1[i][j];                
+
+            }
+        }
+        for(int i=1;i<tamX*2;i=i+1)
+        {
+            for(int j=1;j<tamY;j++)
+            {
+                matriz2[i][2*j]=matriz[i][j];
+                matriz2[i][2*j-1]=matriz[i][j];
+
+            }
+        }
+        
+        return matriz2;
+    }
+    private static float[][] zoomOut(float m1[][], int tamX, int tamY) // Por enquanto as matrizes tem que ser do mesmo tamanho
+    {
+        float matriz[][] = new float[tamX/2][tamY];
+        float matriz2[][] = new float[tamX*2][tamY*2];
+
+        for(int i=1;i<tamX/2;i=i+1)
+        {
+            for(int j=1;j<tamY;j++)
+            {
+                matriz[i][j]=(m1[2*i][j]+m1[2*i-1][j])/2;
+            }
+        }
+        for(int i=1;i<tamX/2;i=i+1)
+        {
+            for(int j=1;j<tamY/2;j++)
+            {
+                matriz2[i][j]=(matriz[i][2*j]+matriz[i][2*j-1])/2;
+
+            }
+        }
+
+        return matriz2;
     }
 
 }
