@@ -32,18 +32,7 @@ public class JanelaInterna extends JInternalFrame {
         setClosable(true);
         setIconifiable(true);
         setResizable(true);
-        setVisivel(janela.getToolBarStatus());
-    }
-
-    
-    public void setVisivel(boolean toolBarStatus) // provavelmente um bug, nao funciona com setVisible
-    {
-        super.setVisible(true);
-
-        if(toolBarStatus==Janela.TOOL_BAR_ON)
-        {
-            setBounds(getX(), getY()+20, getWidth(), getHeight());
-        }
+        setVisible(true);
     }
 
 
