@@ -1,7 +1,5 @@
 
-import java.awt.Color;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.SpinnerModel;
 import javax.swing.SpinnerNumberModel;
@@ -24,7 +22,7 @@ public class JanelaLimiar extends JDialog
         SpinnerModel model = new SpinnerNumberModel(initValue, min, max, step);
         jSpinner1.setModel(model);
 
-         ok.addActionListener(new JanelaLimiarizacaoListener(janela, this));
+        ok.addActionListener(new JanelaLimiarizacaoListener(janela, this));
         
         setSize(300, 150);
         setLocationRelativeTo(null);
@@ -93,6 +91,10 @@ public class JanelaLimiar extends JDialog
 
     public String getText() {
         return jSpinner1.getValue()+"";
+    }
+    public JComboBox getComboBox()
+    {
+        return jComboBox1;
     }
 
 }

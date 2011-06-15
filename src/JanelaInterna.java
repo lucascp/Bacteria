@@ -3,6 +3,7 @@ import java.awt.Color;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
@@ -11,7 +12,7 @@ import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
-
+import javax.swing.filechooser.FileFilter;
 public class JanelaInterna extends JInternalFrame {
 
     private BufferedImage bufImage;
@@ -20,13 +21,11 @@ public class JanelaInterna extends JInternalFrame {
     private float green[][];
     private float blue[][];
     private int larguraImagem, alturaImagem;
-
     private Janela janela;
-
-    boolean aux=false;
+    boolean aux = false;
 
     public JanelaInterna(Janela janela) {
-        this.janela=janela;
+        this.janela = janela;
         setSize(300, 200);
         setMaximizable(true);
         setClosable(true);
@@ -34,7 +33,6 @@ public class JanelaInterna extends JInternalFrame {
         setResizable(true);
         setVisible(true);
     }
-
 
     public int getAlturaImagem() {
         return alturaImagem;
@@ -51,8 +49,6 @@ public class JanelaInterna extends JInternalFrame {
     public int getLarguraImagem() {
         return larguraImagem;
     }
-
-
 
     /**
      * Abre um JFileChooser para o usuário escolher a imagem e abre-a.
@@ -79,10 +75,10 @@ public class JanelaInterna extends JInternalFrame {
         ImageIcon ic = new ImageIcon(imagem);
         alturaImagem = bufImage.getHeight();
         larguraImagem = bufImage.getWidth();
-        
+
         JLabel l = new JLabel(ic);
         add(l);
-        JScrollPane pane = new JScrollPane(l);        
+        JScrollPane pane = new JScrollPane(l);
         add(pane);
         setSize(larguraImagem+20, alturaImagem+40);
 
@@ -92,65 +88,54 @@ public class JanelaInterna extends JInternalFrame {
 
     public float[][] getBlue() // Em java as matrizes são tratadas como ponteiros, então com esse método retorna uma cópia
     {
-        float [][] maux = new float[larguraImagem][alturaImagem];
-        
-        for(int i=0;i<larguraImagem;i++)
-        {
+        float[][] maux = new float[larguraImagem][alturaImagem];
+
+        for (int i = 0; i < larguraImagem; i++) {
             System.arraycopy(blue[i], 0, maux[i], 0, alturaImagem);
         }
-        
+
         return maux;
     }
 
-    public float[][] getGreen() 
-    {
-        float [][] maux = new float[larguraImagem][alturaImagem];
-        
-        for(int i=0;i<larguraImagem;i++)
-        {
+    public float[][] getGreen() {
+        float[][] maux = new float[larguraImagem][alturaImagem];
+
+        for (int i = 0; i < larguraImagem; i++) {
             System.arraycopy(green[i], 0, maux[i], 0, alturaImagem);
         }
-        
+
         return maux;
     }
 
-    public float[][] getRed() 
-    {
-        float [][] maux = new float[larguraImagem][alturaImagem];
-        
-        for(int i=0;i<larguraImagem;i++)
-        {
+    public float[][] getRed() {
+        float[][] maux = new float[larguraImagem][alturaImagem];
+
+        for (int i = 0; i < larguraImagem; i++) {
             System.arraycopy(red[i], 0, maux[i], 0, alturaImagem);
         }
-        
+
         return maux;
     }
 
-    public void setMatrizRed(float [][] red)
-    {
-        this.red=red;
+    public void setMatrizRed(float[][] red) {
+        this.red = red;
     }
 
-    public void setMatrizGreen(float [][] green)
-    {
-        this.green=green;
+    public void setMatrizGreen(float[][] green) {
+        this.green = green;
     }
 
-    public void setMatrizBlue(float [][] blue)
-    {
-        this.blue=blue;
+    public void setMatrizBlue(float[][] blue) {
+        this.blue = blue;
     }
 
-    public void criarImagem()
-    {
+    public void criarImagem() {
         bufImage = new BufferedImage(larguraImagem, alturaImagem, BufferedImage.TYPE_INT_RGB);
         Color c;
-        
-        for(int i=0;i<larguraImagem;i++)
-        {
-            for(int j=0;j<alturaImagem;j++)
-            {
-                c = new Color((int)red[i][j], (int)green[i][j], (int)blue[i][j]);
+
+        for (int i = 0; i < larguraImagem; i++) {
+            for (int j = 0; j < alturaImagem; j++) {
+                c = new Color((int) red[i][j], (int) green[i][j], (int) blue[i][j]);
                 bufImage.setRGB(i, j, c.getRGB());
             }
         }
@@ -162,10 +147,9 @@ public class JanelaInterna extends JInternalFrame {
         add(l);
         JScrollPane pane = new JScrollPane(l);
         add(pane);
-        setSize(larguraImagem+20, alturaImagem+40);
+        setSize(larguraImagem + 20, alturaImagem + 40);
     }
 
-    
     private void criarMatrizes() // transforma a BufferedImage numa matriz
     {
         Color cor;
@@ -174,10 +158,8 @@ public class JanelaInterna extends JInternalFrame {
         green = new float[bufImage.getWidth()][bufImage.getHeight()];
         blue = new float[bufImage.getWidth()][bufImage.getHeight()];
 
-        for(int i=0;i<bufImage.getWidth();i++)
-        {
-            for(int j=0;j<bufImage.getHeight();j++)
-            {
+        for (int i = 0; i < bufImage.getWidth(); i++) {
+            for (int j = 0; j < bufImage.getHeight(); j++) {
                 cor = new Color(bufImage.getRGB(i, j));
                 red[i][j] = cor.getRed();
                 green[i][j] = cor.getGreen();

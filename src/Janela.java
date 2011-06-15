@@ -177,8 +177,15 @@ public class Janela extends JFrame
         JCheckBoxMenuItem jtoolbar = new JCheckBoxMenuItem("Barra de Ferramentas");
         jtoolbar.setSelected(true);
         jtoolbar.setActionCommand("toolbar");
+
+        JMenuItem zoomIn = new JMenuItem("Zoom in");
+        JMenuItem zoomOut = new JMenuItem("Zoom out");
+        zoomIn.setActionCommand("zoomin");
+        zoomOut.setActionCommand("zoomout");
         
         visualizar.add(jtoolbar);
+        visualizar.add(zoomIn);
+        visualizar.add(zoomOut);
 
         //adiciona tudo na jtoolbar
         barra.add(arquivo);
@@ -194,6 +201,8 @@ public class Janela extends JFrame
         soma.addActionListener(listener);
         limiar.addActionListener(listener);
         histograma.addActionListener(listener);
+        zoomIn.addActionListener(listener);
+        zoomOut.addActionListener(listener);
 
         JMenu info = new JMenu("Informações"); //Adicionado por G.
         info.setMnemonic('i');
