@@ -25,17 +25,10 @@ public class JanelaListener implements ActionListener {
                 ((JMenuItem) e.getSource()).setText("Toolbar OFF");
                 janela.getToolBar().setVisible(false);
                 janela.setToolBarStatus(janela.TOOL_BAR_OFF);
-
-
             } else {
                 ((JMenuItem) e.getSource()).setText("Toolbar ON");
                 janela.getToolBar().setVisible(true);
                 janela.setToolBarStatus(janela.TOOL_BAR_ON);
-                for (int i = 0; i < janela.getDesktop().getAllFrames().length; i++) {
-                    if (janela.getDesktop().getAllFrames()[i].getY() <= 18) {
-                        janela.getDesktop().getAllFrames()[i].setBounds(janela.getDesktop().getAllFrames()[i].getX(), 18, janela.getDesktop().getAllFrames()[i].getWidth(), janela.getDesktop().getAllFrames()[i].getHeight());
-                    }
-                }
             }
         } else if (e.getActionCommand().equals("histograma"))
         {
