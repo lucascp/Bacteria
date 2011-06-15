@@ -3,9 +3,12 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
+import javax.swing.JToggleButton;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -35,6 +38,7 @@ public class JanelaHistograma extends JDialog {
     private float gray[][];
     private int alturaImg;
     private int larguraImg;
+    private boolean grayScale;
     /////////////////////////////////////////////////////////////
     
     /////////////////////////////////////////////////////////////
@@ -56,17 +60,19 @@ public class JanelaHistograma extends JDialog {
     /////////////////////////////////////////////////////////////
     // Componentes visuais
     private JPanel jpnlButtons;
-    private JButton jbtnRed;
-    private JButton jbtnGreen;
-    private JButton jbtnBlue;
-    private JButton jbtnGray;
+    private JToggleButton jbtnRed;
+    private JToggleButton jbtnGreen;
+    private JToggleButton jbtnBlue;
+    private JToggleButton jbtnGray;
     private JPanel jpnlChart;
     private ChartPanel chartPanel;
     private JFreeChart jfreeChart;
     private XYPlot xyplot;
     private DefaultXYDataset xyDataSet;  
+    private XYItemRenderer renderer;
     
-    public JanelaHistograma(Janela janela, float red[][], float green[][], float blue[][], float gray[][], int alturaImg, int larguraImg)
+    public JanelaHistograma(Janela janela, float red[][], float green[][],
+            float blue[][], float gray[][], int alturaImg, int larguraImg, boolean grayScale)
     {
         this.janela = janela;
         this.alturaImg = alturaImg;
@@ -74,7 +80,7 @@ public class JanelaHistograma extends JDialog {
         this.red = red;
         this.green = green;
         this.blue = blue;
-        
+        this.grayScale = grayScale;
         //////////////////////////////////////////
         // Constrói interface
         construirInterface();
@@ -101,10 +107,10 @@ public class JanelaHistograma extends JDialog {
         // JPanel buttons = R,G,B,G
         // Seleção do tipo de gráfico
         jpnlButtons = new JPanel(new GridLayout(1, 4));
-        jbtnRed = new JButton("Red");
-        jbtnGreen = new JButton("Green");
-        jbtnBlue = new JButton("Blue");
-        jbtnGray = new JButton("Gray");
+        jbtnRed = new JToggleButton("Red", !grayScale);
+        jbtnGreen = new JToggleButton("Green", !grayScale);
+        jbtnBlue = new JToggleButton("Blue", !grayScale);
+        jbtnGray = new JToggleButton("Gray", grayScale);
         jpnlButtons.add(jbtnRed);
         jpnlButtons.add(jbtnGreen);
         jpnlButtons.add(jbtnBlue);
@@ -122,14 +128,39 @@ public class JanelaHistograma extends JDialog {
         jpnlChart.add(chartPanel, BorderLayout.CENTER);
         parent.add(jpnlChart, BorderLayout.CENTER);
         customizaCor();
+        customizaActionListener();
         /////////////////////////////////////////
         
         setSize(800, 640);
     }
     
+    private void customizaActionListener()
+    {
+        jbtnRed.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                renderer.setSeriesVisible(0, jbtnRed.isSelected());
+            }
+        });
+        jbtnGreen.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                renderer.setSeriesVisible(1, jbtnGreen.isSelected());
+            }
+        });        
+        jbtnBlue.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                renderer.setSeriesVisible(2, jbtnBlue.isSelected());
+            }
+        });        
+        jbtnGray.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                renderer.setSeriesVisible(3, jbtnGray.isSelected());
+            }
+        });        
+    }
+    
     private void customizaCor()
     {
-        XYItemRenderer renderer = new DefaultXYItemRenderer();
+        renderer = new DefaultXYItemRenderer();
         renderer.setSeriesPaint(0, Color.RED);
         renderer.setSeriesPaint(1, Color.GREEN);
         renderer.setSeriesPaint(2, Color.BLUE);
@@ -154,6 +185,11 @@ public class JanelaHistograma extends JDialog {
         xyDataSet.addSeries("Gray", new double[][] {x, pGray});
         
         xyplot.setDataset(xyDataSet);
+        
+        renderer.setSeriesVisible(0, !grayScale);
+        renderer.setSeriesVisible(1, !grayScale);
+        renderer.setSeriesVisible(2, !grayScale);
+        renderer.setSeriesVisible(3, grayScale);
     }
     
     private void histogramaRGB()

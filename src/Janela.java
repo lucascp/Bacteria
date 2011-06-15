@@ -89,7 +89,7 @@ public class Janela extends JFrame
     {
         JanelaInterna janelinha0 = getSelectedFrame();
         if (janelinha0 == null) return;
-        JanelaHistograma janelinha = new JanelaHistograma(this, janelinha0.getRed(), janelinha0.getGreen(), janelinha0.getBlue(), null, janelinha0.getAlturaImagem(), janelinha0.getLarguraImagem());
+        JanelaHistograma janelinha = new JanelaHistograma(this, janelinha0.getRed(), janelinha0.getGreen(), janelinha0.getBlue(), null, janelinha0.getAlturaImagem(), janelinha0.getLarguraImagem(), false);
     }
     
     public void adicionarJanelaInterna(JanelaInterna j)
