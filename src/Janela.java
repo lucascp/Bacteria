@@ -205,6 +205,7 @@ public class Janela extends JFrame
         JMenuItem zoomIn = new JMenuItem("Zoom in");
         JMenuItem zoomOut = new JMenuItem("Zoom out");
         JMenuItem info = new JMenuItem("Informações"); //Adicionado por G.
+        
         zoomIn.setActionCommand("zoomin");
         zoomOut.setActionCommand("zoomout");
         info.setActionCommand("mostrar");
@@ -213,6 +214,7 @@ public class Janela extends JFrame
         visualizar.add(zoomIn);
         visualizar.add(zoomOut);
         visualizar.add(info);
+        
 
         //adicionadas ao JMenu morfologia
         JMenu erosao = new JMenu("Erosão");
