@@ -16,7 +16,19 @@ public class JanelaLimiarizacaoListener implements ActionListener
     public void actionPerformed(ActionEvent e)
     {
         System.out.println(janela.getSelectedFrame().getTitle());
-        Controle.limiarBinario(janela.getSelectedFrame(), Integer.parseInt(janelaLimiar.getText()));
+        if(janelaLimiar.getComboBox().getSelectedIndex()==0)
+        {
+            Controle.limiarBinario(janela.getSelectedFrame(), Integer.parseInt(janelaLimiar.getText()));
+        }
+        else if(janelaLimiar.getComboBox().getSelectedIndex() == 1) // Se estiver toWhite na combo-box
+        {
+            Controle.limiarToWhite(janela.getSelectedFrame(), Integer.parseInt(janelaLimiar.getText()));
+        }
+        else if(janelaLimiar.getComboBox().getSelectedIndex() == 2)
+        {
+            Controle.limiarToBlack(janela.getSelectedFrame(), Integer.parseInt(janelaLimiar.getText()));
+        }
+        
         janelaLimiar.dispose();
         
     }

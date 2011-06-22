@@ -2,6 +2,7 @@ import java.awt.BorderLayout;
 import java.awt.Button;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Insets;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -9,6 +10,7 @@ import java.beans.PropertyVetoException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JButton;
+import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JDesktopPane;
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
@@ -16,6 +18,10 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JScrollPane;
+import javax.swing.JSeparator;
+import javax.swing.JToolBar;
+import javax.swing.KeyStroke;
+import javax.swing.UIManager;
 import javax.swing.event.MenuEvent;
 import javax.swing.event.MenuListener;
 
@@ -29,7 +35,7 @@ public class Janela extends JFrame
     private JScrollPane scrollpane;
     private JanelaListener listener;
     private Controle controle;
-    private JMenuBar toolbar;
+    private JToolBar toolbar;
 
     public static Dimension getScreenSize() {
         return screenSize;
@@ -83,7 +89,9 @@ public class Janela extends JFrame
     {
         JanelaInterna janelinha0 = getSelectedFrame();
         if (janelinha0 == null) return;
-        JanelaHistograma janelinha = new JanelaHistograma(this, janelinha0.getRed(), janelinha0.getGreen(), janelinha0.getBlue(), null, janelinha0.getAlturaImagem(), janelinha0.getLarguraImagem());
+        JanelaHistograma janelinha = new JanelaHistograma(this, janelinha0.getRed(), janelinha0.getGreen(), 
+                janelinha0.getBlue(), janelinha0.getRed(), janelinha0.getAlturaImagem(), 
+                janelinha0.getLarguraImagem(), janelinha0.isGrayScale(), janelinha0.getTitle());
     }
     
     public void adicionarJanelaInterna(JanelaInterna j)
@@ -101,16 +109,21 @@ public class Janela extends JFrame
     }
 
 
-    public JMenuBar criarToolBar()
+    public JToolBar criarToolBar()
     {
-       JMenuBar toolbar = new JMenuBar();
-        JButton b = new JButton("Start");
-        b.setBounds(5, 0, 19, 19);
-        b.setBackground(Color.lightGray);
+        toolbar = new JToolBar();
+        
+        JButton b = new JButton(UIManager.getIcon("FileView.directoryIcon"));
+        b.setActionCommand("abrir");
+        b.addActionListener(listener);
         toolbar.add(b);
-        toolbar.setBounds(0, 0, screenSize.width, 20);
+        
+        b = new JButton(UIManager.getIcon("FileView.floppyDriveIcon"));
+        //b.setActionCommand("salvar"); // TODO
+        b.addActionListener(listener);
+        toolbar.add(b);
+        
         this.add(toolbar, BorderLayout.NORTH);
-        this.toolbar=toolbar;
 
         return toolbar;
     }
@@ -120,19 +133,28 @@ public class Janela extends JFrame
         JMenuBar barra = new JMenuBar();
 
         JMenu arquivo = new JMenu("Arquivo");
+        arquivo.setMnemonic('a');
         JMenu operacoes = new JMenu("Operações");
+        operacoes.setMnemonic('o');
+        JMenu visualizar = new JMenu("Visualizar");
+        visualizar.setMnemonic('v');
+        JMenu morfologia = new JMenu("Morfologia matemática");
+        morfologia.setMnemonic('m');
 
         //adicionadas no JMenu arquivo
-        JMenuItem abrir = new JMenuItem("Abrir...");
+        JMenuItem abrir = new JMenuItem("Abrir");
+        abrir.setAccelerator(KeyStroke.getKeyStroke('A', Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
         abrir.setActionCommand("abrir");
 
-        JMenuItem salvar = new JMenuItem("Salvar...");
+        JMenuItem salvar = new JMenuItem("Salvar");
+        salvar.setAccelerator(KeyStroke.getKeyStroke('S', Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
+        salvar.setActionCommand("salvar");
+        
+        JMenuItem sair = new JMenuItem("Sair");
+        sair.setActionCommand("sair");
 
         JMenuItem grayscale = new JMenuItem("Grayscale");
         grayscale.setActionCommand("gray");
-
-        JMenuItem jtoolbar = new JMenuItem("Toolbar ON");
-        jtoolbar.setActionCommand("toolbar");
 
         //adicionadas no JMenu operacoes
         JMenuItem soma = new JMenuItem("Lógicas e Aritméticas");
@@ -146,32 +168,83 @@ public class Janela extends JFrame
         histograma.setActionCommand("histograma");
         
         arquivo.add(abrir);
-        arquivo.add(salvar);        
-        arquivo.add(jtoolbar);
+        arquivo.add(salvar);
+        arquivo.add(new JSeparator());
+        arquivo.add(sair);
 
         operacoes.add(soma);
         operacoes.add(grayscale);
         operacoes.add(limiar);
         operacoes.add(histograma);
+        
+        //adicionadas no JMenu visualizar
+        JCheckBoxMenuItem jtoolbar = new JCheckBoxMenuItem("Barra de Ferramentas");
+        jtoolbar.setSelected(true);
+        jtoolbar.setActionCommand("toolbar");
 
+        JMenuItem zoomIn = new JMenuItem("Zoom in");
+        JMenuItem zoomOut = new JMenuItem("Zoom out");
+        JMenuItem info = new JMenuItem("Informações"); //Adicionado por G.
+        zoomIn.setActionCommand("zoomin");
+        zoomOut.setActionCommand("zoomout");
+        info.setActionCommand("mostrar");
+        
+        visualizar.add(jtoolbar);
+        visualizar.add(zoomIn);
+        visualizar.add(zoomOut);
+        visualizar.add(info);
+
+        //adicionadas ao JMenu morfologia
+        JMenu erosao = new JMenu("Erosão");
+        JMenu dilatacao = new JMenu("Dilatação");
+        JMenu abertura = new JMenu("Abertura");
+        JMenu fechamento = new JMenu("Fechamento");
+        JMenuItem gray[]=new JMenuItem[4];
+        JMenuItem bin[]=new JMenuItem[4];
+
+        for(int i=0;i<gray.length;i++)
+        {
+            gray[i]=new JMenuItem("Escala de cinza");
+            bin[i]=new JMenuItem("Binário");
+        }
+        erosao.add(bin[0]);erosao.add(gray[0]);
+        dilatacao.add(bin[1]);dilatacao.add(gray[1]);
+        abertura.add(bin[2]);abertura.add(gray[2]);
+        fechamento.add(bin[3]);fechamento.add(gray[3]);
+        bin[0].setActionCommand("erosaobin");
+        bin[1].setActionCommand("dilatacaobin");
+        bin[2].setActionCommand("aberturabin");
+        bin[3].setActionCommand("fechamentobin");
+        gray[0].setActionCommand("erosaogray");
+        gray[1].setActionCommand("dilatacaogray");
+        gray[2].setActionCommand("aberturagray");
+        gray[3].setActionCommand("fechamentogray");
+        
+        morfologia.add(erosao);
+        morfologia.add(dilatacao);
+        morfologia.add(abertura);
+        morfologia.add(fechamento);
+        
+
+
+        //adiciona tudo na jtoolbar
         barra.add(arquivo);
         barra.add(operacoes);
+        barra.add(visualizar);
+        barra.add(morfologia);
         barra.add(new MenuJanela(desktop));
 
         abrir.addActionListener(listener);
+        salvar.addActionListener(listener);
+        sair.addActionListener(listener);
         grayscale.addActionListener(listener);
         jtoolbar.addActionListener(listener);
         soma.addActionListener(listener);
         limiar.addActionListener(listener);
         histograma.addActionListener(listener);
-
-        JMenu info = new JMenu("Informações"); //Adicionado por G.
-
-        JMenuItem mostrar = new JMenuItem("Mostrar...");//info
-        mostrar.setActionCommand("mostrar");
-        info.add(mostrar); //info
-        barra.add(info); //info
-        mostrar.addActionListener(listener);//info
+        zoomIn.addActionListener(listener);
+        zoomOut.addActionListener(listener);
+        info.addActionListener(listener);
 
         
         return barra;
@@ -181,7 +254,7 @@ public class Janela extends JFrame
         return toolBarStatus;
     }
 
-    public JMenuBar getToolBar()
+    public JToolBar getToolBar()
     {
         return toolbar;
     }
@@ -198,12 +271,23 @@ class MenuJanela extends JMenu {
     private JDesktopPane desktopPane;
     private JMenuItem cascata = new JMenuItem("Cascata");
     private JMenuItem ladoALado = new JMenuItem("Lado a Lado");
+    private JMenuItem fecharJanela = new JMenuItem("Fechar");
     private static int FRAME_OFFSET = 35;
 
-    public MenuJanela(JDesktopPane desktopPane) {
-        this.desktopPane = desktopPane;
+    public MenuJanela(JDesktopPane desktop) {
+        this.desktopPane = desktop;
 
         setText("Janela");
+        setMnemonic('j');
+        fecharJanela.addActionListener(new ActionListener() {
+
+            public void actionPerformed(ActionEvent ae) {
+                try {
+                    desktopPane.getSelectedFrame().setClosed(true);
+                } catch (Exception ex) {}
+            }
+        });
+        fecharJanela.setAccelerator(KeyStroke.getKeyStroke('W', Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
 
         addMenuListener(new MenuListener() {
 
@@ -212,17 +296,20 @@ class MenuJanela extends JMenu {
             }
 
             public void menuDeselected(MenuEvent me) {
-                removeAll();
             }
 
             public void menuCanceled(MenuEvent me) {
             }
         });
+        
+        buildChildMenus();
     }
 
     private void buildChildMenus() {
         JInternalFrame janelas[] = desktopPane.getAllFrames();
-
+        
+        removeAll();
+        
         add(cascata);
 
         cascata.addActionListener(new ActionListener() {
@@ -283,6 +370,9 @@ class MenuJanela extends JMenu {
             });
             add(menuItem);
         }
+        
+        addSeparator();
+        add(fecharJanela);
     }
 
     class MenuJanelaItem extends JMenuItem {

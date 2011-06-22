@@ -20,32 +20,24 @@ public class JanelaInterna extends JInternalFrame {
     private float green[][];
     private float blue[][];
     private int larguraImagem, alturaImagem;
-
+    private boolean isBinary;
+    private boolean isGrayScale;
+    private boolean isFlagInicializadas;
+    
+    
     private Janela janela;
-
-    boolean aux=false;
+    boolean aux = false;
 
     public JanelaInterna(Janela janela) {
-        this.janela=janela;
+        this.janela = janela;
         setSize(300, 200);
         setMaximizable(true);
         setClosable(true);
         setIconifiable(true);
         setResizable(true);
-        setVisivel(janela.getToolBarStatus());
+        setVisible(true);
+        isFlagInicializadas = false;
     }
-
-    
-    public void setVisivel(boolean toolBarStatus) // provavelmente um bug, nao funciona com setVisible
-    {
-        super.setVisible(true);
-
-        if(toolBarStatus==Janela.TOOL_BAR_ON)
-        {
-            setBounds(getX(), getY()+20, getWidth(), getHeight());
-        }
-    }
-
 
     public int getAlturaImagem() {
         return alturaImagem;
@@ -62,8 +54,6 @@ public class JanelaInterna extends JInternalFrame {
     public int getLarguraImagem() {
         return larguraImagem;
     }
-
-
 
     /**
      * Abre um JFileChooser para o usuário escolher a imagem e abre-a.
@@ -90,10 +80,10 @@ public class JanelaInterna extends JInternalFrame {
         ImageIcon ic = new ImageIcon(imagem);
         alturaImagem = bufImage.getHeight();
         larguraImagem = bufImage.getWidth();
-        
+
         JLabel l = new JLabel(ic);
         add(l);
-        JScrollPane pane = new JScrollPane(l);        
+        JScrollPane pane = new JScrollPane(l);
         add(pane);
         setSize(larguraImagem+20, alturaImagem+40);
 
@@ -103,65 +93,54 @@ public class JanelaInterna extends JInternalFrame {
 
     public float[][] getBlue() // Em java as matrizes são tratadas como ponteiros, então com esse método retorna uma cópia
     {
-        float [][] maux = new float[larguraImagem][alturaImagem];
-        
-        for(int i=0;i<larguraImagem;i++)
-        {
+        float[][] maux = new float[larguraImagem][alturaImagem];
+
+        for (int i = 0; i < larguraImagem; i++) {
             System.arraycopy(blue[i], 0, maux[i], 0, alturaImagem);
         }
-        
+
         return maux;
     }
 
-    public float[][] getGreen() 
-    {
-        float [][] maux = new float[larguraImagem][alturaImagem];
-        
-        for(int i=0;i<larguraImagem;i++)
-        {
+    public float[][] getGreen() {
+        float[][] maux = new float[larguraImagem][alturaImagem];
+
+        for (int i = 0; i < larguraImagem; i++) {
             System.arraycopy(green[i], 0, maux[i], 0, alturaImagem);
         }
-        
+
         return maux;
     }
 
-    public float[][] getRed() 
-    {
-        float [][] maux = new float[larguraImagem][alturaImagem];
-        
-        for(int i=0;i<larguraImagem;i++)
-        {
+    public float[][] getRed() {
+        float[][] maux = new float[larguraImagem][alturaImagem];
+
+        for (int i = 0; i < larguraImagem; i++) {
             System.arraycopy(red[i], 0, maux[i], 0, alturaImagem);
         }
-        
+
         return maux;
     }
 
-    public void setMatrizRed(float [][] red)
-    {
-        this.red=red;
+    public void setMatrizRed(float[][] red) {
+        this.red = red;
     }
 
-    public void setMatrizGreen(float [][] green)
-    {
-        this.green=green;
+    public void setMatrizGreen(float[][] green) {
+        this.green = green;
     }
 
-    public void setMatrizBlue(float [][] blue)
-    {
-        this.blue=blue;
+    public void setMatrizBlue(float[][] blue) {
+        this.blue = blue;
     }
 
-    public void criarImagem()
-    {
+    public void criarImagem() {
         bufImage = new BufferedImage(larguraImagem, alturaImagem, BufferedImage.TYPE_INT_RGB);
         Color c;
-        
-        for(int i=0;i<larguraImagem;i++)
-        {
-            for(int j=0;j<alturaImagem;j++)
-            {
-                c = new Color((int)red[i][j], (int)green[i][j], (int)blue[i][j]);
+
+        for (int i = 0; i < larguraImagem; i++) {
+            for (int j = 0; j < alturaImagem; j++) {
+                c = new Color((int) red[i][j], (int) green[i][j], (int) blue[i][j]);
                 bufImage.setRGB(i, j, c.getRGB());
             }
         }
@@ -173,10 +152,9 @@ public class JanelaInterna extends JInternalFrame {
         add(l);
         JScrollPane pane = new JScrollPane(l);
         add(pane);
-        setSize(larguraImagem+20, alturaImagem+40);
+        setSize(larguraImagem + 20, alturaImagem + 40);
     }
 
-    
     private void criarMatrizes() // transforma a BufferedImage numa matriz
     {
         Color cor;
@@ -185,10 +163,8 @@ public class JanelaInterna extends JInternalFrame {
         green = new float[bufImage.getWidth()][bufImage.getHeight()];
         blue = new float[bufImage.getWidth()][bufImage.getHeight()];
 
-        for(int i=0;i<bufImage.getWidth();i++)
-        {
-            for(int j=0;j<bufImage.getHeight();j++)
-            {
+        for (int i = 0; i < bufImage.getWidth(); i++) {
+            for (int j = 0; j < bufImage.getHeight(); j++) {
                 cor = new Color(bufImage.getRGB(i, j));
                 red[i][j] = cor.getRed();
                 green[i][j] = cor.getGreen();
@@ -196,4 +172,38 @@ public class JanelaInterna extends JInternalFrame {
             }
         }
     }
+    
+    public void inicializaFlags()
+    {
+        float eps = 1e-4f;
+        isBinary = true;
+        isGrayScale = true;
+        for (int i = 0; i < larguraImagem; i++)
+            for (int j = 0; j < alturaImagem; j++)
+            {
+                if (!(Math.abs(red[i][j] - green[i][j]) < eps && Math.abs(red[i][j] - blue[i][j]) < eps))
+                {
+                    isBinary = false;
+                    isGrayScale = false;
+                    isFlagInicializadas = true;
+                    return;
+                }
+                if (Math.abs(red[i][j] - 0.0f) > eps && Math.abs(red[i][j] - 255.0f) > eps)
+                    isBinary = false;
+            }
+        isFlagInicializadas = true;
+    }
+
+    public boolean isGrayScale()
+    {
+        if (!isFlagInicializadas)
+            inicializaFlags();
+        return isGrayScale;
+    }
+    public boolean isBinary()
+    {
+        if (!isFlagInicializadas)
+            inicializaFlags();
+        return isBinary;
+    }    
 }

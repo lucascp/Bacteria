@@ -22,20 +22,11 @@ public class JanelaListener implements ActionListener {
             new JanelaLimiar(janela);
         } else if (e.getActionCommand().equals("toolbar")) {
             if (janela.getToolBarStatus() == janela.TOOL_BAR_ON) {
-                ((JMenuItem) e.getSource()).setText("Toolbar OFF");
                 janela.getToolBar().setVisible(false);
                 janela.setToolBarStatus(janela.TOOL_BAR_OFF);
-
-
             } else {
-                ((JMenuItem) e.getSource()).setText("Toolbar ON");
                 janela.getToolBar().setVisible(true);
                 janela.setToolBarStatus(janela.TOOL_BAR_ON);
-                for (int i = 0; i < janela.getDesktop().getAllFrames().length; i++) {
-                    if (janela.getDesktop().getAllFrames()[i].getY() <= 18) {
-                        janela.getDesktop().getAllFrames()[i].setBounds(janela.getDesktop().getAllFrames()[i].getX(), 18, janela.getDesktop().getAllFrames()[i].getWidth(), janela.getDesktop().getAllFrames()[i].getHeight());
-                    }
-                }
             }
         } else if (e.getActionCommand().equals("histograma"))
         {
@@ -43,6 +34,16 @@ public class JanelaListener implements ActionListener {
         } else if(e.getActionCommand().equals("mostrar")) //relacionada ao JMenu Informações
         {
             JanelaInfo f = new JanelaInfo(janela.getSelectedFrame());
+        } else if(e.getActionCommand().equals("sair")) {
+            System.exit(0);
+        }
+        else if(e.getActionCommand().equals("zoomin")) //relacionada ao JMenu Informações
+        {
+            Controle.zoomIn(janela.getSelectedFrame());
+        }
+        else if(e.getActionCommand().equals("zoomout")) //relacionada ao JMenu Informações
+        {
+            Controle.zoomOut(janela.getSelectedFrame());
         }
 
     }
