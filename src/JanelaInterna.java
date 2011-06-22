@@ -3,7 +3,13 @@ import java.awt.Color;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
+import java.io.LineNumberReader;
+import java.io.StreamTokenizer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
@@ -89,6 +95,62 @@ public class JanelaInterna extends JInternalFrame {
 
         // tudo ok :)
         return true;
+    }
+    
+    public boolean importarTexto()
+    {
+        LineNumberReader lnr;
+        try {
+            JFileChooser chooser = new JFileChooser();
+            if(chooser.showOpenDialog(this) != JFileChooser.APPROVE_OPTION) {
+                // A janela de abrir imagem foi cancelada ou houve algum erro misterioso
+                return false;
+            }
+            
+            // determina a largura e a altura da matriz
+            lnr = new LineNumberReader(new FileReader(chooser.getSelectedFile().getAbsoluteFile()));
+            lnr.setLineNumber(1);
+            StreamTokenizer stok = new StreamTokenizer(lnr);
+            int largura = Integer.MAX_VALUE;
+            int altura = 0;
+            stok.parseNumbers();
+            stok.eolIsSignificant(true);
+            stok.nextToken();
+            
+            while(stok.ttype != StreamTokenizer.TT_EOF) {
+                altura++;
+                int cnt = 0;
+                while (stok.ttype != StreamTokenizer.TT_EOL) {
+                    if (stok.ttype == StreamTokenizer.TT_NUMBER)
+                        cnt++;
+                    stok.nextToken();
+                }
+                largura = Math.min(cnt, largura);
+            }
+            
+            System.out.println("Carregando arquivo com " + altura + " linhas e " + largura + " colunas.");
+            
+            
+            // carrega a matriz do arquivo
+            float matriz[][] = new float[largura][altura];
+            
+            // carrega a imagem
+            setTitle(chooser.getSelectedFile().getName()); // faz a janela escrever o nome do arquivo
+            setMatrizBlue(matriz);
+            setMatrizRed(matriz);
+            setMatrizGreen(matriz);
+            setLarguraImagem(largura);
+            setAlturaImagem(altura);
+            criarImagem();
+            
+            lnr.close();
+            
+            return true;
+        } catch (Exception ex) {
+            Logger.getLogger(JanelaInterna.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return false;
     }
 
     public float[][] getBlue() // Em java as matrizes são tratadas como ponteiros, então com esse método retorna uma cópia

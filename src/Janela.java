@@ -84,6 +84,18 @@ public class Janela extends JFrame
             janelinha.setSelected(true);
         } catch (PropertyVetoException ex) {}
     }
+    
+    public void importarTextoJanelaInterna()
+    {
+        JanelaInterna janelinha = new JanelaInterna(this);
+        if(!janelinha.importarTexto()) {
+            return;
+        }
+        desktop.add(janelinha);
+        try {
+            janelinha.setSelected(true);
+        } catch (PropertyVetoException ex) {}
+    }
 
     public void abrirJanelaHistograma()
     {
@@ -150,6 +162,12 @@ public class Janela extends JFrame
         salvar.setAccelerator(KeyStroke.getKeyStroke('S', Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
         salvar.setActionCommand("salvar");
         
+        JMenu importar = new JMenu("Importar");
+        JMenuItem importarTexto = new JMenuItem("Arquivo de Texto");
+        importarTexto.addActionListener(listener);
+        importarTexto.setActionCommand("importarTexto");
+        importar.add(importarTexto);
+        
         JMenuItem sair = new JMenuItem("Sair");
         sair.setActionCommand("sair");
 
@@ -169,6 +187,8 @@ public class Janela extends JFrame
         
         arquivo.add(abrir);
         arquivo.add(salvar);
+        arquivo.add(new JSeparator());
+        arquivo.add(importar);
         arquivo.add(new JSeparator());
         arquivo.add(sair);
 

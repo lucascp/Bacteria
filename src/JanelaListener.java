@@ -14,6 +14,8 @@ public class JanelaListener implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if (e.getActionCommand().equals("abrir")) {
             janela.abrirJanelaInterna();
+        } else if (e.getActionCommand().equals("importarTexto")) {
+            janela.importarTextoJanelaInterna();
         } else if (e.getActionCommand().equals("gray")) {
             Controle.escalaDeCinza(janela.getSelectedFrame());
         } else if (e.getActionCommand().equals("oper")) {
