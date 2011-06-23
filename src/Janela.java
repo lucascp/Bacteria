@@ -197,35 +197,33 @@ public class Janela extends JFrame
         
 
         //adicionadas ao JMenu morfologia
-        JMenu erosao = new JMenu("Erosão");
-        JMenu dilatacao = new JMenu("Dilatação");
-        JMenu abertura = new JMenu("Abertura");
-        JMenu fechamento = new JMenu("Fechamento");
-        JMenuItem gray[]=new JMenuItem[4];
-        JMenuItem bin[]=new JMenuItem[4];
-
-        for(int i=0;i<gray.length;i++)
-        {
-            gray[i]=new JMenuItem("Escala de cinza");
-            bin[i]=new JMenuItem("Binário");
-        }
-        erosao.add(bin[0]);erosao.add(gray[0]);
-        dilatacao.add(bin[1]);dilatacao.add(gray[1]);
-        abertura.add(bin[2]);abertura.add(gray[2]);
-        fechamento.add(bin[3]);fechamento.add(gray[3]);
-        bin[0].setActionCommand("erosaobin");
-        bin[1].setActionCommand("dilatacaobin");
-        bin[2].setActionCommand("aberturabin");
-        bin[3].setActionCommand("fechamentobin");
-        gray[0].setActionCommand("erosaogray");
-        gray[1].setActionCommand("dilatacaogray");
-        gray[2].setActionCommand("aberturagray");
-        gray[3].setActionCommand("fechamentogray");
+        //adicionadas ao JMenu morfologia
+        JMenuItem erosao = new JMenuItem("Erosão");
+        JMenuItem dilatacao = new JMenuItem("Dilatação");
+        JMenuItem abertura = new JMenuItem("Abertura");
+        JMenuItem fechamento = new JMenuItem("Fechamento");
+        JMenuItem gradDilatacao = new JMenuItem("Gradiente da Dilatacao");
+        JMenuItem gradErosao = new JMenuItem("Gradiente da Erosão");
+        JMenuItem topHatPicos = new JMenuItem("TOP-HAT (Picos)");
+        JMenuItem topHatVales = new JMenuItem("TOP-HAT (Vales)");
+        erosao.setActionCommand("erosao");
+        dilatacao.setActionCommand("dilatacao");
+        abertura.setActionCommand("abertura");
+        fechamento.setActionCommand("fechamento");
+        gradDilatacao.setActionCommand("gradDilatacao");
+        gradErosao.setActionCommand("gradErosao");
+        topHatPicos.setActionCommand("topHatPicos");
+        topHatVales.setActionCommand("topHatVales");
         
+
         morfologia.add(erosao);
         morfologia.add(dilatacao);
         morfologia.add(abertura);
         morfologia.add(fechamento);
+        morfologia.add(gradDilatacao);
+        morfologia.add(gradErosao);
+        morfologia.add(topHatPicos);
+        morfologia.add(topHatVales);
         
 
 
@@ -247,6 +245,14 @@ public class Janela extends JFrame
         zoomIn.addActionListener(listener);
         zoomOut.addActionListener(listener);
         info.addActionListener(listener);
+        erosao.addActionListener(listener);
+        dilatacao.addActionListener(listener);
+        abertura.addActionListener(listener);
+        fechamento.addActionListener(listener);
+        gradDilatacao.addActionListener(listener);
+        gradErosao.addActionListener(listener);
+        topHatPicos.addActionListener(listener);
+        topHatVales.addActionListener(listener);
 
         
         return barra;

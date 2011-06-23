@@ -540,5 +540,334 @@ public class Controle // classe com métodos estáticos para realizar as operaco
 
         return matriz2;
     }
+    
+    
+ private static float[][][] erosaoFunction(float matriz[][][], int[][] elementoEstruturante, int iteracoes) {
+        /*
+        * Erosao feita apenas com elementos planares.
+        */
+        int es_largura = elementoEstruturante.length;
+        int es_altura = elementoEstruturante[0].length;
+        
+        int largura = matriz[0].length;
+        int altura = matriz[0][0].length;
+
+        float matriz_resultado[][][] = new float[3][largura][altura];        
+        float max = 0;
+        
+              
+        /*So para colocar as bordas*/
+       for (int i = 0; i < largura; i++) {
+            for(int j = 0; j < altura; j++) {
+                matriz_resultado[0][i][j] = matriz[0][i][j];
+                matriz_resultado[1][i][j] = matriz[0][i][j];
+                matriz_resultado[2][i][j] = matriz[0][i][j];
+            }             
+        }      
+       
+        for(int it = 0; it < iteracoes; it++) {        
+            for(int canal = 0; canal < 3; canal++) {            
+                for(int jlargura = es_largura/2; jlargura < (largura-es_largura/2); jlargura++) {
+                    for(int jaltura = es_altura/2; jaltura < (altura-es_altura/2); jaltura++) {
+                        for(int i = 0; i < es_largura; i++) {
+                            for(int j = 0; j< es_altura; j++)
+                            {
+                                /*
+                                 * Movendo o elemento estruturante em cada matriz.
+                                 * O algoritmo para imagem binária e em escala de cinza é igual!
+                                 * Para erosão, eu verifico o maximo(lembrando que branco é 255 e preto é 0) entre os pontos pertencentes ao elemento estruturante
+                                 */                                
+                                 if(elementoEstruturante[i][j] == 1 && (matriz[canal][jlargura-es_largura/2+i][jaltura-es_altura/2+j] > max)) {
+                                     max = matriz[canal][jlargura-es_largura/2+i][jaltura-es_altura/2+j];
+                                 }
+                            } //fim es_altura
+                        } // fim es_largura
+                        matriz_resultado[canal][jlargura][jaltura] = max; 
+                        max = 0;
+                    } //fim matriz altura
+                } // fim matriz largura
+            } // fim canal   
+            
+            for (int i = 0; i < largura; i++) {
+                for(int j = 0; j < altura; j++) {
+                    matriz[0][i][j] = matriz_resultado[0][i][j];
+                    matriz[1][i][j] = matriz_resultado[1][i][j];
+                    matriz[2][i][j] = matriz_resultado[2][i][j];
+                }             
+            }        
+        } // fim iteração
+        
+        return matriz_resultado;        
+    }
+    
+    public static void erosao(JanelaInterna jan, int[][] elementoEstruturante, int iteracoes){
+        JanelaInterna novaJanelaInterna = new JanelaInterna(janela);
+        float matriz[][][] = new float[3][][];
+        matriz[0] = jan.getRed();
+        matriz[1] = jan.getBlue();
+        matriz[2] = jan.getGreen();
+        
+        matriz = erosaoFunction(matriz, elementoEstruturante, iteracoes);
+        
+        novaJanelaInterna.setMatrizRed(matriz[0]);
+        novaJanelaInterna.setMatrizBlue(matriz[1]);
+        novaJanelaInterna.setMatrizGreen(matriz[2]);
+
+        novaJanelaInterna.setLarguraImagem(jan.getLarguraImagem());
+        novaJanelaInterna.setAlturaImagem(jan.getAlturaImagem());
+        novaJanelaInterna.setTitle("erosão (it: "+iteracoes +") da " +jan.getTitle());
+        novaJanelaInterna.criarImagem();
+        janela.adicionarJanelaInterna(novaJanelaInterna);
+    }
+    
+    private static float[][][] dilatacaoFunction(float matriz[][][], int[][] elementoEstruturante, int iteracoes) {
+                /*
+        * Dilatação feita apenas com elementos planares.
+        */
+        int es_largura = elementoEstruturante.length;
+        int es_altura = elementoEstruturante[0].length;
+        
+        int largura = matriz[0].length;
+        int altura = matriz[0][0].length;
+                
+        float matriz_resultado[][][] = new float[3][largura][altura];        
+        float min = 255;
+        
+        /*So para colocar as bordas*/
+       for (int i = 0; i < largura; i++) {
+            for(int j = 0; j < altura; j++) {
+                matriz_resultado[0][i][j] = matriz[0][i][j];
+                matriz_resultado[1][i][j] = matriz[0][i][j];
+                matriz_resultado[2][i][j] = matriz[0][i][j];
+            }             
+        }    
+                       
+        for(int it = 0; it < iteracoes; it++) {        
+            for(int canal = 0; canal < 3; canal++) {            
+                for(int jlargura = es_largura/2; jlargura < (largura-es_largura/2); jlargura++) {
+                    for(int jaltura = es_altura/2; jaltura < (altura-es_altura/2); jaltura++) {
+                        for(int i = 0; i < es_largura; i++) {
+                            for(int j = 0; j< es_altura; j++)
+                            {
+                                /*
+                                 * Movendo o elemento estruturante em cada matriz.
+                                 * O algoritmo para imagem binária e em escala de cinza é igual!
+                                 * Para dilatação, eu verifico o minimo(lembrando que branco é 255 e preto é 0) entre os pontos pertencentes ao elemento estruturante
+                                 */                                
+                                 if(elementoEstruturante[i][j] == 1 && (matriz[canal][jlargura-es_largura/2+i][jaltura-es_altura/2+j] < 255)) {
+                                     min = matriz[canal][jlargura-es_largura/2+i][jaltura-es_altura/2+j];
+                                 }
+                            } //fim es_altura
+                        } // fim es_largura
+                        matriz_resultado[canal][jlargura][jaltura] = min; 
+                        min = 255;
+                    } //fim matriz altura
+                } // fim matriz largura
+            } // fim canal   
+            
+            for (int i = 0; i < largura; i++) {
+                for(int j = 0; j < altura; j++) {
+                    matriz[0][i][j] = matriz_resultado[0][i][j];
+                    matriz[1][i][j] = matriz_resultado[1][i][j];
+                    matriz[2][i][j] = matriz_resultado[2][i][j];
+                }             
+            }        
+        } // fim iteração
+        
+        return matriz_resultado;
+    }
+    
+     public static void dilatacao(JanelaInterna jan, int[][] elementoEstruturante, int iteracoes){
+        JanelaInterna novaJanelaInterna = new JanelaInterna(janela);
+        float matriz[][][] = new float[3][][];
+        matriz[0] = jan.getRed();
+        matriz[1] = jan.getBlue();
+        matriz[2] = jan.getGreen();
+        
+        int largura = jan.getLarguraImagem();
+        int altura = jan.getAlturaImagem();
+        
+        matriz = dilatacaoFunction(matriz, elementoEstruturante, iteracoes); 
+        
+        novaJanelaInterna.setMatrizRed(matriz[0]);
+        novaJanelaInterna.setMatrizBlue(matriz[1]);
+        novaJanelaInterna.setMatrizGreen(matriz[2]);
+
+        novaJanelaInterna.setLarguraImagem(largura);
+        novaJanelaInterna.setAlturaImagem(altura);
+        novaJanelaInterna.setTitle("dilatação (it: "+iteracoes +") da " +jan.getTitle());
+        novaJanelaInterna.criarImagem();
+        janela.adicionarJanelaInterna(novaJanelaInterna);
+    }
+     
+    public static void abertura(JanelaInterna jan, int[][] elementoEstruturante, int iteracoes){
+        JanelaInterna novaJanelaInterna = new JanelaInterna(janela);
+        
+        //erodir i vezes e depois dilatar i vezes, onde i = iterações
+        float matriz[][][] = new float[3][][];
+        matriz[0] = jan.getRed();
+        matriz[1] = jan.getBlue();
+        matriz[2] = jan.getGreen();
+        
+        matriz = erosaoFunction(matriz, elementoEstruturante, iteracoes);
+        matriz = dilatacaoFunction(matriz, elementoEstruturante, iteracoes);
+                
+        novaJanelaInterna.setMatrizRed(matriz[0]);
+        novaJanelaInterna.setMatrizBlue(matriz[1]);
+        novaJanelaInterna.setMatrizGreen(matriz[2]);
+
+        novaJanelaInterna.setLarguraImagem(jan.getLarguraImagem());
+        novaJanelaInterna.setAlturaImagem(jan.getAlturaImagem());
+        novaJanelaInterna.setTitle("abertura (it: "+iteracoes +") da " +jan.getTitle());
+        novaJanelaInterna.criarImagem();
+        janela.adicionarJanelaInterna(novaJanelaInterna);         
+    }
+    
+    public static void fechamento(JanelaInterna jan, int[][] elementoEstruturante, int iteracoes) {
+        JanelaInterna novaJanelaInterna = new JanelaInterna(janela);
+        
+        //erodir i vezes e depois dilatar i vezes, onde i = iterações
+        float matriz[][][] = new float[3][][];
+        matriz[0] = jan.getRed();
+        matriz[1] = jan.getBlue();
+        matriz[2] = jan.getGreen();
+        
+        matriz = dilatacaoFunction(matriz, elementoEstruturante, iteracoes);
+        matriz = erosaoFunction(matriz, elementoEstruturante, iteracoes);
+        
+                
+        novaJanelaInterna.setMatrizRed(matriz[0]);
+        novaJanelaInterna.setMatrizBlue(matriz[1]);
+        novaJanelaInterna.setMatrizGreen(matriz[2]);
+
+        novaJanelaInterna.setLarguraImagem(jan.getLarguraImagem());
+        novaJanelaInterna.setAlturaImagem(jan.getAlturaImagem());
+        novaJanelaInterna.setTitle("fechamento (it: "+iteracoes +") da " +jan.getTitle());
+        novaJanelaInterna.criarImagem();
+        janela.adicionarJanelaInterna(novaJanelaInterna);  
+    }
+    
+    public static void gradDilatacao(JanelaInterna jan, int[][] elementoEstruturante, int iteracoes){
+        // matriz dilatada - matriz
+        JanelaInterna novaJanelaInterna = new JanelaInterna(janela);
+        float matriz[][][] = new float[3][][];
+        matriz[0] = jan.getRed();
+        matriz[1] = jan.getBlue();
+        matriz[2] = jan.getGreen();   
+        float matrizDilatada[][][] = new float[3][][];
+        matrizDilatada = dilatacaoFunction(matriz, elementoEstruturante, iteracoes);
+        
+        for(int canal = 0; canal < 3; canal++) {
+            for(int i = 0; i < jan.getLarguraImagem(); i++) {
+                for(int j = 0; j < jan.getAlturaImagem(); j++) {
+                    matriz[canal][i][j] = matrizDilatada[canal][i][j] + matriz[canal][i][j];
+                    if(matriz[canal][i][j] > 255) matriz[canal][i][j] = 255;
+                    
+                    
+                }
+            }
+        }
+        novaJanelaInterna.setMatrizRed(matriz[0]);
+        novaJanelaInterna.setMatrizBlue(matriz[1]);
+        novaJanelaInterna.setMatrizGreen(matriz[2]);
+        
+        novaJanelaInterna.setLarguraImagem(jan.getLarguraImagem());
+        novaJanelaInterna.setAlturaImagem(jan.getAlturaImagem());
+        novaJanelaInterna.setTitle("grad dilatacao(it: "+iteracoes +") da " +jan.getTitle());
+        novaJanelaInterna.criarImagem();
+        janela.adicionarJanelaInterna(novaJanelaInterna);  
+    }
+    
+    public static void gradErosao(JanelaInterna jan, int[][] elementoEstruturante, int iteracoes) {
+        //bordas aprimoradas->  matriz - (erosao da matriz) 
+        JanelaInterna novaJanelaInterna = new JanelaInterna(janela);
+        float matriz[][][] = new float[3][][];
+        matriz[0] = jan.getRed();
+        matriz[1] = jan.getBlue();
+        matriz[2] = jan.getGreen(); 
+        
+        float matrizErodida[][][] = erosaoFunction(matriz, elementoEstruturante, iteracoes);
+        
+        for(int canal = 0; canal < 3; canal++) {
+            for(int i = 0; i < jan.getLarguraImagem(); i++) {
+                for(int j = 0; j < jan.getAlturaImagem(); j++) {
+                    matriz[canal][i][j] = matriz[canal][i][j] + matrizErodida[canal][i][j];
+                    if(matriz[canal][i][j] > 255) matriz[canal][i][j] = 255;
+                }
+            }
+        }
+        novaJanelaInterna.setMatrizRed(matriz[0]);
+        novaJanelaInterna.setMatrizBlue(matriz[1]);
+        novaJanelaInterna.setMatrizGreen(matriz[2]);
+        
+        
+        novaJanelaInterna.setLarguraImagem(jan.getLarguraImagem());
+        novaJanelaInterna.setAlturaImagem(jan.getAlturaImagem());
+        novaJanelaInterna.setTitle("grad erosao (it: "+iteracoes +") da " +jan.getTitle());
+        novaJanelaInterna.criarImagem();
+        janela.adicionarJanelaInterna(novaJanelaInterna);             
+    }
+    
+    public static void topHatPicos(JanelaInterna jan, int[][] elementoEstruturante, int iteracoes) {
+        //matriz - abertura da matriz 
+        JanelaInterna novaJanelaInterna = new JanelaInterna(janela);
+        float matriz[][][] = new float[3][][];
+        matriz[0] = jan.getRed();
+        matriz[1] = jan.getBlue();
+        matriz[2] = jan.getGreen();
+        
+                
+        float matrizAbertura[][][] = erosaoFunction(matriz, elementoEstruturante, iteracoes);
+        matrizAbertura = dilatacaoFunction(matrizAbertura, elementoEstruturante, iteracoes);
+        
+                for(int canal = 0; canal < 3; canal++) {
+            for(int i = 0; i < jan.getLarguraImagem(); i++) {
+                for(int j = 0; j < jan.getAlturaImagem(); j++) {
+                    matriz[canal][i][j] = matriz[canal][i][j] - matrizAbertura[canal][i][j];
+                    if(matriz[canal][i][j] < 0) matriz[canal][i][j] = 0;
+                }
+            }
+        }
+                
+        novaJanelaInterna.setMatrizRed(matriz[0]);
+        novaJanelaInterna.setMatrizBlue(matriz[1]);
+        novaJanelaInterna.setMatrizGreen(matriz[2]);
+        
+        novaJanelaInterna.setLarguraImagem(jan.getLarguraImagem());
+        novaJanelaInterna.setAlturaImagem(jan.getAlturaImagem());
+        novaJanelaInterna.setTitle("topHatPicos (it: "+iteracoes +") da " +jan.getTitle());
+        novaJanelaInterna.criarImagem();
+        janela.adicionarJanelaInterna(novaJanelaInterna);             
+    }
+    
+    public static void topHatVales(JanelaInterna jan, int[][] elementoEstruturante, int iteracoes) {
+        // fechamento da matriz - matriz 
+        JanelaInterna novaJanelaInterna = new JanelaInterna(janela);
+        float matriz[][][] = new float[3][][];
+        matriz[0] = jan.getRed();
+        matriz[1] = jan.getBlue();
+        matriz[2] = jan.getGreen();
+        
+        float matrizFechamento[][][] = dilatacaoFunction(matriz, elementoEstruturante, iteracoes);
+        matrizFechamento = erosaoFunction(matrizFechamento, elementoEstruturante, iteracoes);
+        
+         for(int canal = 0; canal < 3; canal++) {
+            for(int i = 0; i < jan.getLarguraImagem(); i++) {
+                for(int j = 0; j < jan.getAlturaImagem(); j++) {
+                    matriz[canal][i][j] = matrizFechamento[canal][i][j] - matriz[canal][i][j];
+                    if(matriz[canal][i][j] < 0) matriz[canal][i][j] = 0;
+                }
+            }
+        } 
+        novaJanelaInterna.setMatrizRed(matriz[0]);
+        novaJanelaInterna.setMatrizBlue(matriz[1]);
+        novaJanelaInterna.setMatrizGreen(matriz[2]);
+        
+        novaJanelaInterna.setLarguraImagem(jan.getLarguraImagem());
+        novaJanelaInterna.setAlturaImagem(jan.getAlturaImagem());
+        novaJanelaInterna.setTitle("topHatVales (it: "+iteracoes +") da " +jan.getTitle());
+        novaJanelaInterna.criarImagem();
+        janela.adicionarJanelaInterna(novaJanelaInterna);          
+    }
 
 }
