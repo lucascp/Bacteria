@@ -108,11 +108,12 @@ public class JanelaInterna extends JInternalFrame {
             }
             
             // determina a largura e a altura da matriz
+            int largura = Integer.MAX_VALUE;
+            int altura = 0;
+            
             lnr = new LineNumberReader(new FileReader(chooser.getSelectedFile().getAbsoluteFile()));
             lnr.setLineNumber(1);
             StreamTokenizer stok = new StreamTokenizer(lnr);
-            int largura = Integer.MAX_VALUE;
-            int altura = 0;
             stok.parseNumbers();
             stok.eolIsSignificant(true);
             stok.nextToken();
@@ -126,13 +127,34 @@ public class JanelaInterna extends JInternalFrame {
                     stok.nextToken();
                 }
                 largura = Math.min(cnt, largura);
+                stok.nextToken();
             }
             
-            System.out.println("Carregando arquivo com " + altura + " linhas e " + largura + " colunas.");
+            lnr.close();
             
             
             // carrega a matriz do arquivo
+            System.out.println("Carregando arquivo com " + altura + " linhas e " + largura + " colunas.");
             float matriz[][] = new float[largura][altura];
+            
+            lnr = new LineNumberReader(new FileReader(chooser.getSelectedFile().getAbsoluteFile()));
+            lnr.setLineNumber(1);
+            stok = new StreamTokenizer(lnr);
+            stok.parseNumbers();
+            stok.eolIsSignificant(true);
+            stok.nextToken();
+            
+            for(int i = 0; stok.ttype != StreamTokenizer.TT_EOF; i++) {
+                int cnt = 0;
+                for (int j = 0; stok.ttype != StreamTokenizer.TT_EOL; j++) {
+                    if (stok.ttype == StreamTokenizer.TT_NUMBER)
+                        matriz[j][i] = (float) stok.nval;
+                    stok.nextToken();
+                }
+                stok.nextToken();
+            }
+            
+            lnr.close();
             
             // carrega a imagem
             setTitle(chooser.getSelectedFile().getName()); // faz a janela escrever o nome do arquivo
