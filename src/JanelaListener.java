@@ -19,9 +19,13 @@ public class JanelaListener implements ActionListener {
         } else if (e.getActionCommand().equals("gray")) {
             Controle.escalaDeCinza(janela.getSelectedFrame());
         } else if (e.getActionCommand().equals("oper")) {
-            new JChooseFrame(janela);
+            if(!(janela.getSelectedFrame() == null)) {
+                new JChooseFrame(janela);
+            }            
         } else if (e.getActionCommand().equals("limiar")) {
-            new JanelaLimiar(janela);
+            if(!(janela.getSelectedFrame() == null)) {
+                new JanelaLimiar(janela);
+            }
         } else if (e.getActionCommand().equals("toolbar")) {
             if (janela.getToolBarStatus() == janela.TOOL_BAR_ON) {
                 janela.getToolBar().setVisible(false);
@@ -47,6 +51,46 @@ public class JanelaListener implements ActionListener {
         {
             Controle.zoomOut(janela.getSelectedFrame());
         }
+        else if(e.getActionCommand().equals("erosao")) {
+            if(!(janela.getSelectedFrame() == null)) {
+                new JanelaMorfologia(janela, "Erosão");
+            }
+        }
+        else if(e.getActionCommand().equals("dilatacao")) {
+            if(!(janela.getSelectedFrame() == null)) {
+                new JanelaMorfologia(janela, "Dilatação");
+            }
+        }
+        else if(e.getActionCommand().equals("abertura")) {
+            if(!(janela.getSelectedFrame() == null)) {
+                new JanelaMorfologia(janela, "Abertura");
+            }
+        }
+        else if(e.getActionCommand().equals("fechamento")) {
+            if(!(janela.getSelectedFrame() == null)) {
+                new JanelaMorfologia(janela, "Fechamento");
+            }
+        }  
+        else if(e.getActionCommand().equals("gradDilatacao")) {
+            if(!(janela.getSelectedFrame() == null)) {
+                new JanelaMorfologia(janela, "Gradiente da Dilatação");
+            }
+        }
+        else if(e.getActionCommand().equals("gradErosao")) {
+            if(!(janela.getSelectedFrame() == null)) {
+                new JanelaMorfologia(janela, "Gradiente da Erosão");
+            }
+        }  
+        else if(e.getActionCommand().equals("topHatPicos")) {
+            if(!(janela.getSelectedFrame() == null)) {
+                new JanelaMorfologia(janela, "TOP-HAT Picos");
+            }
+        }  
+        else if(e.getActionCommand().equals("topHatVales")) {
+            if(!(janela.getSelectedFrame() == null)) {
+                new JanelaMorfologia(janela, "TOP-HAT Vales");
+            }
+        }  
 
     }
 }
