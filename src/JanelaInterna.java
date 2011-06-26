@@ -3,8 +3,10 @@ import java.awt.Color;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
+import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.LineNumberReader;
 import java.io.StreamTokenizer;
@@ -174,6 +176,34 @@ public class JanelaInterna extends JInternalFrame {
         
         return false;
     }
+    
+    public void exportarTexto() {
+        JFileChooser chooser = new JFileChooser();
+        
+        if(!isGrayScale()) {
+            JOptionPane.showMessageDialog(null, "A imagem deve estar em escala de cinza.", "Erro", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        if(chooser.showSaveDialog(this) != JFileChooser.APPROVE_OPTION) {
+            // A janela de exportar foi cancelada ou houve algum erro misterioso
+            return;
+        }
+        try {
+            BufferedWriter out = new BufferedWriter(new FileWriter(chooser.getSelectedFile().getAbsoluteFile()));
+            
+            for(int i = 0; i < alturaImagem; i++) {
+                for(int j = 0; j < larguraImagem; j++) {
+                    out.write(((int) blue[i][j]) + " ");
+                }
+                out.write('\n');
+            }
+            
+            out.close();
+        } catch (IOException ex) {
+            Logger.getLogger(JanelaInterna.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 
     public float[][] getBlue() // Em java as matrizes são tratadas como ponteiros, então com esse método retorna uma cópia
     {
@@ -289,5 +319,5 @@ public class JanelaInterna extends JInternalFrame {
         if (!isFlagInicializadas)
             inicializaFlags();
         return isBinary;
-    }    
+    }
 }
