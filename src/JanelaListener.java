@@ -14,28 +14,27 @@ public class JanelaListener implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if (e.getActionCommand().equals("abrir")) {
             janela.abrirJanelaInterna();
+        } else if (e.getActionCommand().equals("importarTexto")) {
+            janela.importarTextoJanelaInterna();
+        } else if (e.getActionCommand().equals("exportarTexto")) {
+            janela.exportarTextoJanelaInterna();
         } else if (e.getActionCommand().equals("gray")) {
             Controle.escalaDeCinza(janela.getSelectedFrame());
         } else if (e.getActionCommand().equals("oper")) {
-            new JChooseFrame(janela);
+            if(!(janela.getSelectedFrame() == null)) {
+                new JChooseFrame(janela);
+            }            
         } else if (e.getActionCommand().equals("limiar")) {
-            new JanelaLimiar(janela);
+            if(!(janela.getSelectedFrame() == null)) {
+                new JanelaLimiar(janela);
+            }
         } else if (e.getActionCommand().equals("toolbar")) {
             if (janela.getToolBarStatus() == janela.TOOL_BAR_ON) {
-                ((JMenuItem) e.getSource()).setText("Toolbar OFF");
                 janela.getToolBar().setVisible(false);
                 janela.setToolBarStatus(janela.TOOL_BAR_OFF);
-
-
             } else {
-                ((JMenuItem) e.getSource()).setText("Toolbar ON");
                 janela.getToolBar().setVisible(true);
                 janela.setToolBarStatus(janela.TOOL_BAR_ON);
-                for (int i = 0; i < janela.getDesktop().getAllFrames().length; i++) {
-                    if (janela.getDesktop().getAllFrames()[i].getY() <= 18) {
-                        janela.getDesktop().getAllFrames()[i].setBounds(janela.getDesktop().getAllFrames()[i].getX(), 18, janela.getDesktop().getAllFrames()[i].getWidth(), janela.getDesktop().getAllFrames()[i].getHeight());
-                    }
-                }
             }
         } else if (e.getActionCommand().equals("histograma"))
         {
@@ -45,7 +44,57 @@ public class JanelaListener implements ActionListener {
             JanelaInfo f = new JanelaInfo(janela.getSelectedFrame());
         } else if(e.getActionCommand().equals("fft")) {
             Controle.fftDireta(janela.getSelectedFrame());
+        } else if(e.getActionCommand().equals("sair")) {
+            System.exit(0);
         }
+        else if(e.getActionCommand().equals("zoomin")) //relacionada ao JMenu Informações
+        {
+            Controle.zoomIn(janela.getSelectedFrame());
+        }
+        else if(e.getActionCommand().equals("zoomout")) //relacionada ao JMenu Informações
+        {
+            Controle.zoomOut(janela.getSelectedFrame());
+        }
+        else if(e.getActionCommand().equals("erosao")) {
+            if(!(janela.getSelectedFrame() == null)) {
+                new JanelaMorfologia(janela, "Erosão");
+            }
+        }
+        else if(e.getActionCommand().equals("dilatacao")) {
+            if(!(janela.getSelectedFrame() == null)) {
+                new JanelaMorfologia(janela, "Dilatação");
+            }
+        }
+        else if(e.getActionCommand().equals("abertura")) {
+            if(!(janela.getSelectedFrame() == null)) {
+                new JanelaMorfologia(janela, "Abertura");
+            }
+        }
+        else if(e.getActionCommand().equals("fechamento")) {
+            if(!(janela.getSelectedFrame() == null)) {
+                new JanelaMorfologia(janela, "Fechamento");
+            }
+        }  
+        else if(e.getActionCommand().equals("gradDilatacao")) {
+            if(!(janela.getSelectedFrame() == null)) {
+                new JanelaMorfologia(janela, "Gradiente da Dilatação");
+            }
+        }
+        else if(e.getActionCommand().equals("gradErosao")) {
+            if(!(janela.getSelectedFrame() == null)) {
+                new JanelaMorfologia(janela, "Gradiente da Erosão");
+            }
+        }  
+        else if(e.getActionCommand().equals("topHatPicos")) {
+            if(!(janela.getSelectedFrame() == null)) {
+                new JanelaMorfologia(janela, "TOP-HAT Picos");
+            }
+        }  
+        else if(e.getActionCommand().equals("topHatVales")) {
+            if(!(janela.getSelectedFrame() == null)) {
+                new JanelaMorfologia(janela, "TOP-HAT Vales");
+            }
+        }  
 
     }
 }
