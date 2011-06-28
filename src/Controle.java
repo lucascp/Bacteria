@@ -363,7 +363,7 @@ public class Controle // classe com métodos estáticos para realizar as operaco
     }
     
     private static void fft(float real[], float imag[], int dir, int m) {
-        int nn, aux, i, j, k, l, l1, l2;
+        int nn, aux, i, j, k, l1, l2;
         float sx, sy, c1, c2, u1, u2, t1, t2, z;
         
         nn = (int)Math.pow(2,m);
@@ -400,7 +400,7 @@ public class Controle // classe com métodos estáticos para realizar as operaco
                 for(i = j; i < nn; i+= l2) {
                     aux = i + l1;
                     t1 = u1 * real[aux] - u2 * imag[aux];
-                    t2 = u1 * imag[aux] - u2 * real[aux];
+                    t2 = u1 * imag[aux] + u2 * real[aux];
                     real[aux] = real[i] - t1;
                     imag[aux] = imag[i] - t2;
                     real[i] += t1;
@@ -493,16 +493,12 @@ public class Controle // classe com métodos estáticos para realizar as operaco
             for(j = 0; j < ny; j++)
                 imag[i][j] = 0;
         
-        fft2d(real, imag, nx, ny, 1);
+        fft2d(real, imag, nx, ny, 1);        
         
-        
-        for(i = 0; i < nx; i++) {
-            for(j = 0; j < ny; j++) {
+        for(i = 0; i < nx; i++)
+            for(j = 0; j < ny; j++)
                 mag[i][j] = (float)Math.sqrt(real[i][j]*real[i][j] + imag[i][j]*imag[i][j]);
-                //System.out.print(mag[i][j] + " ");
-            }
-            //System.out.println();
-        }
+
         mag = transformacaoLog(mag, nx, ny, 1.0);
         mag = arrumaEscala(mag, nx, ny);
           
@@ -547,5 +543,5 @@ public class Controle // classe com métodos estáticos para realizar as operaco
                 r[i][j] = (float)(c*Math.log1p(m[i][j]));
         return r;
     }
-
+    
 }
