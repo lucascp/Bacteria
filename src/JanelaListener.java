@@ -42,8 +42,10 @@ public class JanelaListener implements ActionListener {
         } else if(e.getActionCommand().equals("mostrar")) //relacionada ao JMenu Informações
         {
             JanelaInfo f = new JanelaInfo(janela.getSelectedFrame());
-        } else if(e.getActionCommand().equals("fft")) {
+        } else if(e.getActionCommand().equals("dft")) {
             Controle.fftDireta(janela.getSelectedFrame());
+        } else if(e.getActionCommand().equals("idft")) {
+            Controle.fftInversa(janela.getSelectedFrame());
         } else if(e.getActionCommand().equals("sair")) {
             System.exit(0);
         }

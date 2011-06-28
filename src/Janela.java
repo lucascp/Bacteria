@@ -196,8 +196,11 @@ public class Janela extends JFrame
         JMenuItem histograma = new JMenuItem("Histograma/Equalização");
         histograma.setActionCommand("histograma");
         
-        JMenuItem fft = new JMenuItem("FFT");
-        fft.setActionCommand("fft");
+        JMenuItem dft = new JMenuItem("DFT");
+        dft.setActionCommand("dft");
+        
+        JMenuItem idft = new JMenuItem("IDFT");
+        idft.setActionCommand("idft");
         
         arquivo.add(abrir);
         arquivo.add(salvar);
@@ -211,7 +214,8 @@ public class Janela extends JFrame
         operacoes.add(grayscale);
         operacoes.add(limiar);
         operacoes.add(histograma);
-        operacoes.add(fft);
+        operacoes.add(dft);
+        operacoes.add(idft);
         
         //adicionadas no JMenu visualizar
         JCheckBoxMenuItem jtoolbar = new JCheckBoxMenuItem("Barra de Ferramentas");
@@ -278,7 +282,8 @@ public class Janela extends JFrame
         soma.addActionListener(listener);
         limiar.addActionListener(listener);
         histograma.addActionListener(listener);
-        fft.addActionListener(listener);
+        dft.addActionListener(listener);
+        idft.addActionListener(listener);
         zoomIn.addActionListener(listener);
         zoomOut.addActionListener(listener);
         info.addActionListener(listener);

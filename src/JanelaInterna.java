@@ -27,9 +27,12 @@ public class JanelaInterna extends JInternalFrame {
     private float red[][];
     private float green[][];
     private float blue[][];
+    private float real[][];
+    private float imag[][];
     private int larguraImagem, alturaImagem;
     private boolean isBinary;
     private boolean isGrayScale;
+    private boolean isDFT;
     private boolean isFlagInicializadas;
     
     
@@ -45,6 +48,7 @@ public class JanelaInterna extends JInternalFrame {
         setResizable(true);
         setVisible(true);
         isFlagInicializadas = false;
+        real = imag = null;
     }
 
     public int getAlturaImagem() {
@@ -235,6 +239,24 @@ public class JanelaInterna extends JInternalFrame {
 
         return maux;
     }
+    
+    public float[][] getReal() {
+        float[][] maux = new float[larguraImagem][alturaImagem];
+
+        for (int i = 0; i < larguraImagem; i++)
+            System.arraycopy(real[i], 0, maux[i], 0, alturaImagem);
+        
+        return maux;
+    }
+    
+    public float[][] getImag() {
+        float[][] maux = new float[larguraImagem][alturaImagem];
+
+        for (int i = 0; i < larguraImagem; i++)
+            System.arraycopy(imag[i], 0, maux[i], 0, alturaImagem);
+        
+        return maux;
+    }
 
     public void setMatrizRed(float[][] red) {
         this.red = red;
@@ -246,6 +268,14 @@ public class JanelaInterna extends JInternalFrame {
 
     public void setMatrizBlue(float[][] blue) {
         this.blue = blue;
+    }
+    
+    public void setMatrizReal(float[][] real) {
+        this.real = real;
+    }
+    
+    public void setMatrizImag(float[][] imag) {
+        this.imag = imag;
     }
 
     public void criarImagem() {
@@ -292,6 +322,7 @@ public class JanelaInterna extends JInternalFrame {
         float eps = 1e-4f;
         isBinary = true;
         isGrayScale = true;
+        isDFT = true;
         for (int i = 0; i < larguraImagem; i++)
             for (int j = 0; j < alturaImagem; j++)
             {
@@ -305,6 +336,8 @@ public class JanelaInterna extends JInternalFrame {
                 if (Math.abs(red[i][j] - 0.0f) > eps && Math.abs(red[i][j] - 255.0f) > eps)
                     isBinary = false;
             }
+        if(real == null || imag == null)
+            isDFT = false;
         isFlagInicializadas = true;
     }
 
@@ -319,5 +352,36 @@ public class JanelaInterna extends JInternalFrame {
         if (!isFlagInicializadas)
             inicializaFlags();
         return isBinary;
+    }
+    public boolean isDFT()
+    {
+        if (!isFlagInicializadas)
+            inicializaFlags();
+        return isDFT;
+    }
+    public void setDFT(boolean flag) {
+        this.isDFT = flag;
+    }
+    
+    public void mostraMagDFT() {
+        if(isDFT == false)
+            return;
+        
+        float [][]mag = new float[larguraImagem][alturaImagem];
+        int i, j;
+        
+        for(i = 0; i < larguraImagem; i++)
+            for(j = 0; j < alturaImagem; j++)
+                mag[i][j] = (float)Math.sqrt(real[i][j]*real[i][j] + imag[i][j]*imag[i][j]);
+        
+        mag = Controle.transformacaoLog(mag, larguraImagem, alturaImagem, 1.0);
+        mag = Controle.arrumaEscala(mag, larguraImagem, alturaImagem);
+        
+        this.red = mag;
+        this.green = mag;
+        this.blue = mag;
+        this.setTitle("DFT de " + this.getTitle());
+        
+        this.criarImagem();
     }
 }
